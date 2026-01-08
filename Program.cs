@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace HelloWorld
 {
@@ -12,7 +12,7 @@ namespace HelloWorld
             int attendedDays = 150;
             double percentage = (double)attendedDays / totalDays * 100;
             int displayPercentage = (int)Math.Round(percentage); 
-            Console.WriteLine($"Attendance Percentage: {displayPercentage}%");
+            Console.WriteLine("Attendance Percentage: " + displayPercentage + "%");
             
 
             // Exercise 2: Online Examination Result Processing
@@ -20,7 +20,7 @@ namespace HelloWorld
             double average = Math.Round(marks.Average(), 2); 
             Console.WriteLine($"Average Marks: {average}");
             int scholarshipAverage = (int)Math.Round(average); 
-            Console.WriteLine($"Scholarship Eligibility Average: {scholarshipAverage}");
+            Console.WriteLine("Scholarship Eligibility Average: " + scholarshipAverage);
 
 
             // Exercise 3: Library Fine Calculation System
@@ -28,8 +28,8 @@ namespace HelloWorld
             int daysOverdue = 5;
             decimal totalFine = finePerDay * daysOverdue;
             double loggedFine = (double)totalFine;
-            Console.WriteLine($"Total Fine (display): {totalFine:C}");
-            Console.WriteLine($"Total Fine (logged): {loggedFine}");
+            Console.WriteLine("Total Fine (display): " + totalFine );
+            Console.WriteLine("Total Fine (logged): " +loggedFine);
 
 
             // Exercise 4: Banking Interest Calculation Module
@@ -37,7 +37,7 @@ namespace HelloWorld
             float interestRate = 3.5f; 
             decimal monthlyInterest = balance * (decimal)interestRate / 100 / 12;
             balance += monthlyInterest;
-            Console.WriteLine($"Updated Balance: {balance:C}");
+            Console.WriteLine("Updated Balance: " + balance);
 
 
             // Exercise 5: E-Commerce Order Pricing Engine
@@ -64,7 +64,7 @@ namespace HelloWorld
             else if (finalScore >= 80) grade = 9;
             else if (finalScore >= 70) grade = 8;
             else grade = 7;
-            Console.WriteLine($"Grade: {grade}");
+            Console.WriteLine("Grade: " + grade);
 
 
             // Exercise 8: Mobile Data Usage Tracker
@@ -72,16 +72,16 @@ namespace HelloWorld
             double usageMB = usageBytes / (1024.0 * 1024);
             double usageGB = usageBytes / (1024.0 * 1024 * 1024);
             int monthlySummary = (int)Math.Round(usageGB);
-            Console.WriteLine($"Usage in MB: {usageMB}");
-            Console.WriteLine($"Usage in GB: {usageGB}");
-            Console.WriteLine($"Monthly Summary (GB): {monthlySummary}");
+            Console.WriteLine("Usage in MB: " + usageMB);
+            Console.WriteLine("Usage in GB: " + usageGB);
+            Console.WriteLine("Monthly Summary (GB): " + monthlySummary);
 
 
             // Exercise 9: Warehouse Inventory Capacity Control
             int itemCount = 5000;
             ushort maxCapacity = 10000;
             bool isOverCapacity = itemCount > maxCapacity;
-            Console.WriteLine($"Over Capacity: {isOverCapacity}");
+            Console.WriteLine("Over Capacity: " + isOverCapacity);
             
 
             // Exercise 10: Payroll Salary Computation
@@ -89,7 +89,7 @@ namespace HelloWorld
             double allowances = 5000.75;
             double deductions = 2000.25;
             decimal netSalary = basicSalary + (decimal)allowances - (decimal)deductions;
-            Console.WriteLine($"Net Salary: {netSalary:C}");
+            Console.WriteLine("Net Salary: " + netSalary.ToString("C"));
         }
     }
 }
