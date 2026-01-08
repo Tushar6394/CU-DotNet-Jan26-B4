@@ -18,7 +18,7 @@ namespace HelloWorld
             // Exercise 2: Online Examination Result Processing
             int[] marks = { 80, 90, 85, 95 };
             double average = Math.Round(marks.Average(), 2); 
-            Console.WriteLine($"Average Marks: {average}");
+            Console.WriteLine("Average Marks: " + average);
             int scholarshipAverage = (int)Math.Round(average); 
             Console.WriteLine("Scholarship Eligibility Average: " + scholarshipAverage);
 
@@ -45,7 +45,7 @@ namespace HelloWorld
             decimal tax = 99.99m;
             decimal discount = 50.00m;
             decimal finalAmount = (decimal)cartTotal + tax - discount;
-            Console.WriteLine($"Final Payable Amount: {finalAmount:C}");
+            Console.WriteLine("Final Payable Amount: " + finalAmount.ToString("C"));
 
 
             // Exercise 6: Weather Monitoring & Reporting
@@ -53,8 +53,8 @@ namespace HelloWorld
             double celsius = sensorReading / 10.0;
             double dailyAverage = 23.7;
             int dashboardTemp = (int)Math.Round(dailyAverage);
-            Console.WriteLine($"Sensor Celsius: {celsius}");
-            Console.WriteLine($"Dashboard Temp: {dashboardTemp}");
+            Console.WriteLine("Sensor Celsius: " + celsius);
+            Console.WriteLine("Dashboard Temp: " + dashboardTemp);
 
 
             // Exercise 7: University Grading Engine
