@@ -1,0 +1,15 @@
+/Users/tusharmacbookair/Desktop/DOTNET/CU-DotNet-Jan26-B4/Week2/FrameWorkConsoleApp/bin/Debug/net8.0/FrameWorkConsoleApp
+/Users/tusharmacbookair/Desktop/DOTNET/CU-DotNet-Jan26-B4/Week2/FrameWorkConsoleApp/bin/Debug/net8.0/FrameWorkConsoleApp.deps.json
+/Users/tusharmacbookair/Desktop/DOTNET/CU-DotNet-Jan26-B4/Week2/FrameWorkConsoleApp/bin/Debug/net8.0/FrameWorkConsoleApp.runtimeconfig.json
+/Users/tusharmacbookair/Desktop/DOTNET/CU-DotNet-Jan26-B4/Week2/FrameWorkConsoleApp/bin/Debug/net8.0/FrameWorkConsoleApp.dll
+/Users/tusharmacbookair/Desktop/DOTNET/CU-DotNet-Jan26-B4/Week2/FrameWorkConsoleApp/bin/Debug/net8.0/FrameWorkConsoleApp.pdb
+/Users/tusharmacbookair/Desktop/DOTNET/CU-DotNet-Jan26-B4/Week2/FrameWorkConsoleApp/obj/Debug/net8.0/FrameWorkConsoleApp.GeneratedMSBuildEditorConfig.editorconfig
+/Users/tusharmacbookair/Desktop/DOTNET/CU-DotNet-Jan26-B4/Week2/FrameWorkConsoleApp/obj/Debug/net8.0/FrameWorkConsoleApp.AssemblyInfoInputs.cache
+/Users/tusharmacbookair/Desktop/DOTNET/CU-DotNet-Jan26-B4/Week2/FrameWorkConsoleApp/obj/Debug/net8.0/FrameWorkConsoleApp.AssemblyInfo.cs
+/Users/tusharmacbookair/Desktop/DOTNET/CU-DotNet-Jan26-B4/Week2/FrameWorkConsoleApp/obj/Debug/net8.0/FrameWorkConsoleApp.csproj.CoreCompileInputs.cache
+/Users/tusharmacbookair/Desktop/DOTNET/CU-DotNet-Jan26-B4/Week2/FrameWorkConsoleApp/obj/Debug/net8.0/FrameWorkConsoleApp.sourcelink.json
+/Users/tusharmacbookair/Desktop/DOTNET/CU-DotNet-Jan26-B4/Week2/FrameWorkConsoleApp/obj/Debug/net8.0/FrameWorkConsoleApp.dll
+/Users/tusharmacbookair/Desktop/DOTNET/CU-DotNet-Jan26-B4/Week2/FrameWorkConsoleApp/obj/Debug/net8.0/refint/FrameWorkConsoleApp.dll
+/Users/tusharmacbookair/Desktop/DOTNET/CU-DotNet-Jan26-B4/Week2/FrameWorkConsoleApp/obj/Debug/net8.0/FrameWorkConsoleApp.pdb
+/Users/tusharmacbookair/Desktop/DOTNET/CU-DotNet-Jan26-B4/Week2/FrameWorkConsoleApp/obj/Debug/net8.0/FrameWorkConsoleApp.genruntimeconfig.cache
+/Users/tusharmacbookair/Desktop/DOTNET/CU-DotNet-Jan26-B4/Week2/FrameWorkConsoleApp/obj/Debug/net8.0/ref/FrameWorkConsoleApp.dll

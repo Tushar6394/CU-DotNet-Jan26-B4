@@ -1,0 +1,12 @@
+/Users/tusharmacbookair/Desktop/DOTNET/CU-DotNet-Jan26-B4/Day5/GreetingSolution/GreetingLibrary/bin/Debug/net8.0/GreetingLibrary.deps.json
+/Users/tusharmacbookair/Desktop/DOTNET/CU-DotNet-Jan26-B4/Day5/GreetingSolution/GreetingLibrary/bin/Debug/net8.0/GreetingLibrary.dll
+/Users/tusharmacbookair/Desktop/DOTNET/CU-DotNet-Jan26-B4/Day5/GreetingSolution/GreetingLibrary/bin/Debug/net8.0/GreetingLibrary.pdb
+/Users/tusharmacbookair/Desktop/DOTNET/CU-DotNet-Jan26-B4/Day5/GreetingSolution/GreetingLibrary/obj/Debug/net8.0/GreetingLibrary.GeneratedMSBuildEditorConfig.editorconfig
+/Users/tusharmacbookair/Desktop/DOTNET/CU-DotNet-Jan26-B4/Day5/GreetingSolution/GreetingLibrary/obj/Debug/net8.0/GreetingLibrary.AssemblyInfoInputs.cache
+/Users/tusharmacbookair/Desktop/DOTNET/CU-DotNet-Jan26-B4/Day5/GreetingSolution/GreetingLibrary/obj/Debug/net8.0/GreetingLibrary.AssemblyInfo.cs
+/Users/tusharmacbookair/Desktop/DOTNET/CU-DotNet-Jan26-B4/Day5/GreetingSolution/GreetingLibrary/obj/Debug/net8.0/GreetingLibrary.csproj.CoreCompileInputs.cache
+/Users/tusharmacbookair/Desktop/DOTNET/CU-DotNet-Jan26-B4/Day5/GreetingSolution/GreetingLibrary/obj/Debug/net8.0/GreetingLibrary.sourcelink.json
+/Users/tusharmacbookair/Desktop/DOTNET/CU-DotNet-Jan26-B4/Day5/GreetingSolution/GreetingLibrary/obj/Debug/net8.0/GreetingLibrary.dll
+/Users/tusharmacbookair/Desktop/DOTNET/CU-DotNet-Jan26-B4/Day5/GreetingSolution/GreetingLibrary/obj/Debug/net8.0/refint/GreetingLibrary.dll
+/Users/tusharmacbookair/Desktop/DOTNET/CU-DotNet-Jan26-B4/Day5/GreetingSolution/GreetingLibrary/obj/Debug/net8.0/GreetingLibrary.pdb
+/Users/tusharmacbookair/Desktop/DOTNET/CU-DotNet-Jan26-B4/Day5/GreetingSolution/GreetingLibrary/obj/Debug/net8.0/ref/GreetingLibrary.dll

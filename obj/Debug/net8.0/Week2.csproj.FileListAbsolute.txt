@@ -1,0 +1,15 @@
+/Users/tusharmacbookair/Desktop/DOTNET/CU-DotNet-Jan26-B4/Week2/bin/Debug/net8.0/Week2
+/Users/tusharmacbookair/Desktop/DOTNET/CU-DotNet-Jan26-B4/Week2/bin/Debug/net8.0/Week2.deps.json
+/Users/tusharmacbookair/Desktop/DOTNET/CU-DotNet-Jan26-B4/Week2/bin/Debug/net8.0/Week2.runtimeconfig.json
+/Users/tusharmacbookair/Desktop/DOTNET/CU-DotNet-Jan26-B4/Week2/bin/Debug/net8.0/Week2.dll
+/Users/tusharmacbookair/Desktop/DOTNET/CU-DotNet-Jan26-B4/Week2/bin/Debug/net8.0/Week2.pdb
+/Users/tusharmacbookair/Desktop/DOTNET/CU-DotNet-Jan26-B4/Week2/obj/Debug/net8.0/Week2.GeneratedMSBuildEditorConfig.editorconfig
+/Users/tusharmacbookair/Desktop/DOTNET/CU-DotNet-Jan26-B4/Week2/obj/Debug/net8.0/Week2.AssemblyInfoInputs.cache
+/Users/tusharmacbookair/Desktop/DOTNET/CU-DotNet-Jan26-B4/Week2/obj/Debug/net8.0/Week2.AssemblyInfo.cs
+/Users/tusharmacbookair/Desktop/DOTNET/CU-DotNet-Jan26-B4/Week2/obj/Debug/net8.0/Week2.csproj.CoreCompileInputs.cache
+/Users/tusharmacbookair/Desktop/DOTNET/CU-DotNet-Jan26-B4/Week2/obj/Debug/net8.0/Week2.sourcelink.json
+/Users/tusharmacbookair/Desktop/DOTNET/CU-DotNet-Jan26-B4/Week2/obj/Debug/net8.0/Week2.dll
+/Users/tusharmacbookair/Desktop/DOTNET/CU-DotNet-Jan26-B4/Week2/obj/Debug/net8.0/refint/Week2.dll
+/Users/tusharmacbookair/Desktop/DOTNET/CU-DotNet-Jan26-B4/Week2/obj/Debug/net8.0/Week2.pdb
+/Users/tusharmacbookair/Desktop/DOTNET/CU-DotNet-Jan26-B4/Week2/obj/Debug/net8.0/Week2.genruntimeconfig.cache
+/Users/tusharmacbookair/Desktop/DOTNET/CU-DotNet-Jan26-B4/Week2/obj/Debug/net8.0/ref/Week2.dll
