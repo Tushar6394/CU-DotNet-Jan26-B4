@@ -15,7 +15,7 @@ public class HomeController : Controller
     {
         return View();
     }
-    public IActionResult Contacts()
+    public IActionResult Contact()
     {
         return View();
     }
