@@ -98,6 +98,7 @@ internal class Program
 
 
 
+/*
 //Print Pattern 
 //    A
 //   AB
@@ -128,3 +129,25 @@ internal class Program
 //Outer loop runs from 1 to totalRows controlling the number of rows   
 //First inner loop prints spaces before characters in each row
 //Second inner loop prints characters from 'A' up to the current row number 
+*/
+
+
+
+
+//=============================================================================================================================================
+
+//Date and Time of Today
+internal class Program
+{
+    static void Main(string[] args)
+    {
+        DateTime today = DateTime.Today;
+        Console.WriteLine(today);
+        Console.WriteLine($"{today:dd/MM/yyyy}");
+        Console.WriteLine($"{today:ddd/MMM/yyyy}");
+        Console.WriteLine($"{today:dddd/MMMM/yyyy}");
+
+        DateTime now = DateTime.Now;
+        Console.WriteLine(now);
+    }
+}
