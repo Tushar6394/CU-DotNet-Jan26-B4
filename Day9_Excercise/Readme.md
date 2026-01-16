@@ -1,4 +1,4 @@
-# ############################################## Weekly Sales Analysis System #################################################################
+# Weekly Sales Analysis System 
 
 1. The program starts from the Main() method and initializes two arrays to store daily sales values and their corresponding sales categories.
 <!-- static void Main(string[] args)
