@@ -13,11 +13,19 @@
   "project": {
     "version": "1.0.0",
     "restore": {
+<<<<<<< HEAD
       "projectUniqueName": "/Users/tusharmacbookair/Desktop/DOTNET/CU-DotNet-Jan26-B4/Week2/Week2.csproj",
       "projectName": "Week2",
       "projectPath": "/Users/tusharmacbookair/Desktop/DOTNET/CU-DotNet-Jan26-B4/Week2/Week2.csproj",
       "packagesPath": "/Users/tusharmacbookair/.nuget/packages/",
       "outputPath": "/Users/tusharmacbookair/Desktop/DOTNET/CU-DotNet-Jan26-B4/Week2/obj/",
+=======
+      "projectUniqueName": "/Users/tusharmacbookair/Desktop/DOTNET/CU-DotNet-Jan26-B4/Day10/Day10.csproj",
+      "projectName": "Day10",
+      "projectPath": "/Users/tusharmacbookair/Desktop/DOTNET/CU-DotNet-Jan26-B4/Day10/Day10.csproj",
+      "packagesPath": "/Users/tusharmacbookair/.nuget/packages/",
+      "outputPath": "/Users/tusharmacbookair/Desktop/DOTNET/CU-DotNet-Jan26-B4/Day10/obj/",
+>>>>>>> eca889f (Done)
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/Users/tusharmacbookair/.nuget/NuGet/NuGet.Config"

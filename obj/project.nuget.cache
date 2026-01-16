@@ -1,8 +1,14 @@
 {
   "version": 2,
+<<<<<<< HEAD
   "dgSpecHash": "bf8BvkwfvxY=",
   "success": true,
   "projectFilePath": "/Users/tusharmacbookair/Desktop/DOTNET/CU-DotNet-Jan26-B4/Week2/Week2.csproj",
+=======
+  "dgSpecHash": "LTvVG0RSncs=",
+  "success": true,
+  "projectFilePath": "/Users/tusharmacbookair/Desktop/DOTNET/CU-DotNet-Jan26-B4/Day10/Day10.csproj",
+>>>>>>> eca889f (Done)
   "expectedPackageFiles": [],
   "logs": []
 }
