@@ -1,5 +1,5 @@
 
-﻿using System;
+/*using System;
 
 class Code
 {
@@ -14,7 +14,7 @@ class Code
         );
     }
 }
-
+*/
 ﻿//Method 
 //Main() is entry point method
 //(accessmodifier) (static) returnType NameOfFunctions(parameters){}
@@ -22,7 +22,7 @@ class Code
 //class default access specifier is internal
 // parameteres are arguments
 //arguments will be passed when calling methods
-
+using System;
 namespace Day10Methods
 {
     internal class NewMethods

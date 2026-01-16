@@ -13,19 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-<<<<<<< HEAD
-      "projectUniqueName": "/Users/tusharmacbookair/Desktop/DOTNET/CU-DotNet-Jan26-B4/Week2/Week2.csproj",
-      "projectName": "Week2",
-      "projectPath": "/Users/tusharmacbookair/Desktop/DOTNET/CU-DotNet-Jan26-B4/Week2/Week2.csproj",
-      "packagesPath": "/Users/tusharmacbookair/.nuget/packages/",
-      "outputPath": "/Users/tusharmacbookair/Desktop/DOTNET/CU-DotNet-Jan26-B4/Week2/obj/",
-=======
       "projectUniqueName": "/Users/tusharmacbookair/Desktop/DOTNET/CU-DotNet-Jan26-B4/Day10/Day10.csproj",
       "projectName": "Day10",
       "projectPath": "/Users/tusharmacbookair/Desktop/DOTNET/CU-DotNet-Jan26-B4/Day10/Day10.csproj",
       "packagesPath": "/Users/tusharmacbookair/.nuget/packages/",
       "outputPath": "/Users/tusharmacbookair/Desktop/DOTNET/CU-DotNet-Jan26-B4/Day10/obj/",
->>>>>>> eca889f (Done)
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/Users/tusharmacbookair/.nuget/NuGet/NuGet.Config"
@@ -75,5 +67,13 @@
         "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.416/PortableRuntimeIdentifierGraph.json"
       }
     }
-  }
+  },
+  "logs": [
+    {
+      "code": "Undefined",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Problem reading the cache file /Users/tusharmacbookair/Desktop/DOTNET/CU-DotNet-Jan26-B4/Day10/obj/project.nuget.cache : Invalid property identifier character: <. Path 'version', line 3, position 0."
+    }
+  ]
 }
