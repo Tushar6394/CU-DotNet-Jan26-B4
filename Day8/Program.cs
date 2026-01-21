@@ -135,7 +135,7 @@ internal class Program
 
 
 //=============================================================================================================================================
-
+/*
 //Date and Time of Today
 internal class Program
 {
@@ -151,3 +151,83 @@ internal class Program
         Console.WriteLine(now);
     }
 }
+*/
+
+
+
+
+//=============================================================================================================================================
+
+
+
+/*
+
+//String Immutability
+internal class Program
+{
+    static void Main(string[] args)
+    {
+        string name = "Tuhsar";
+        Console.WriteLine(name.GetHashCode());
+        name = name + "Macbookair";
+        Console.WriteLine(name.GetHashCode());
+
+        //index is used as an indexer to access individual characters in the string
+        //a topic in OOPs
+        Console.WriteLine(name[3]);
+    }
+}
+//explaination:
+//Strings are immutable in C#. When we modify a string, a new string object is created in memory
+//Defined in namespace System
+//The GetHashCode() method returns a hash code for the string object, which changes when the string is modified
+//In this example, the hash code changes after we append "Macbookair" to the original string "Tuhsar"
+//This demonstrates that a new string object is created in memory after modification
+
+//String Creation
+//1. Using string literal
+//string str1 = "Hello World";
+//2. Using new keyword
+//string str2 = new string(new char[] {'H', 'e', 'l', 'l', 'o'});
+//3. Using String.Format
+//string str3 = String.Format("Hello {0}", "World");
+//4. Using String.Concat
+//string str4 = String.Concat("Hello", " ", "World");
+//5. Using String.Join
+//string str5 = String.Join(" ", new string[] {"Hello", "World"});
+
+//Important properties and methods of String class
+//1. Length property - returns the length of the string
+//2. string|index|
+//3. IsNUllOrEmpty() - checks if the string is null or empty
+//4. IsNullOrWhiteSpace() - checks if the string is null, empty, or consists only of white-space characters
+//5. ToUpper() - converts the string to uppercase
+//6. ToLower() - converts the string to lowercase
+//7. Trim() - removes leading and trailing white-space characters
+//8. Substring() - retrieves a substring from the string
+//9. Split() - splits the string into an array of substrings based on a delimiter
+//10. Replace() - replaces occurrences of a specified substring with another substring
+//11. Contains() - checks if the string contains a specified substring
+//12. IndexOf() - returns the index of the first occurrence of a specified substring
+//13. StartsWith() - checks if the string starts with a specified substring
+//14. EndsWith() - checks if the string ends with a specified substring
+//15. Format() - formats a string using placeholders
+//16. Concat() - concatenates multiple strings into one
+//17. Join() - joins an array of strings into a single string with a specified separator
+//18. GetHashCode() - returns a hash code for the string
+*/
+
+
+
+
+//Using Index
+
+ string input = "A9";
+ if(char.IsLetter(input[0]) && char.IsDigit(input[1]))
+ {
+    Console.WriteLine("Valid format"); 
+ }
+    else
+    {
+        Console.WriteLine("Invalid format");
+    }

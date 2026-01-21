@@ -1,91 +1,116 @@
-﻿//Method 
-//Main() is entry point method
-//(accessmodifier) (static) returnType NameOfFunctions(parameters){}
-//method default access specifier is private
-//class default access specifier is internal
-// parameteres are arguments
-//arguments will be passed when calling methods
+/*
+using System.Collections.Specialized;
 
-
-using System;
-
-namespace Day10Methods
+namespace DAY10METHODS
 {
-    internal class NewMethods
+    internal class Program
     {
-        public void SayHello()
-        {
-            Console.WriteLine("Hello!");
-        }
-
-        // Method Overloading
-        public void SayHello(string name)
-        {
-            Console.WriteLine($"Hello, {name}!");
-        }
-    }
-
-    class DemoMethods
-    {
-        void CallAnotherMethod()
-        {
-            NewMethods classobj = new NewMethods();
-            classobj.SayHello();
-            classobj.SayHello("Tushar");
-        }
-
         static void Main(string[] args)
         {
-            DemoMethods demo = new DemoMethods();
-            demo.CallAnotherMethod();
+            Console.WriteLine("starting demo");
+            SayHello();
+            Console.WriteLine("calling SayHello method again");
+            SayHello("sahil");
+
+            //demoMethods obj = new demoMethods();
+            //obj.classAnotherClassMethod();
+
+            demoMethods.classAnotherClassMethod();
+
+            int square = GetSquare(10);
+            Console.WriteLine($"square of taken number is: {square}");
+
+            // ================= METHOD WITH RETURN TYPE ================= 
+            static int GetSquare(int num1)
+            {
+                return num1 * num1;
+            }
+
+            // ================= METHOD RETURNUNG ARRAY ================= 
+
+            int[] results = GetOddNumber(10);
+            Console.WriteLine($"Odd numbers are: {string.Join(',', results)}");
+
+            static int[] GetOddNumber(int num)
+            {
+                int size = num % 2 == 0 ? num / 2 : (num / 2) + 1;
+                Console.WriteLine(size);
+                int[] arr = new int[size];
+
+                int index = 0;
+                for(int i = 1; i <= num; i = i+2)
+                {
+                    arr[index] = i;
+                    index++;
+                }
+
+                return arr;
+            }
+
+
+        }
+        public static void SayHello()
+        {
+            Console.WriteLine("Hello, World!");
+        }
+        // METHOD OVERLOADING
+        public static void SayHello(string name)
+        {
+            Console.WriteLine($"Hello {name}");
         }
     }
-}
 
-
-
-
-
-/*
-//main() is the entry point method
-//create a method to return the max values of the int array passed and make it user can it own input and dont make the array limit fixed
-using System;
-internal class Program
-{
-     static void Main(string[] args)
+    class demoMethods
     {
-        int n;
-        Console.Write("Enter number of elements in the array: ");
-        while (!int.TryParse(Console.ReadLine(), out n) || n <= 0)
-        {
-            Console.Write("Invalid input. Please enter a positive integer: ");
-        }
+        //static void demo()
+        //{
+        //    Console.WriteLine("Demo method in demoMethods class");
+        //}
 
-        int[] numbers = new int[n];
-        for (int i = 0; i < n; i++)
+        public static void classAnotherClassMethod()
         {
-            Console.Write($"Enter element {i + 1}: ");
-            while (!int.TryParse(Console.ReadLine(), out numbers[i]))
-            {
-                Console.Write($"Invalid input. Please enter an integer for element {i + 1}: ");
-            }
-        }
+            //Console.WriteLine("Method in another class");
+            // if static is not there then create class object to call the method
+            //Program classObj = new Program();
+            //classObj.SayHello();
+            Program.SayHello();
+            Console.WriteLine("classAnotherClassMethod called");
 
-        int maxValue = FindMaxValue(numbers);
-        Console.WriteLine($"The maximum value in the array is: {maxValue}");
-    }
-
-    static int FindMaxValue(int[] arr)
-    {
-        int max = arr[0];
-        for (int i = 1; i < arr.Length; i++)
-        {
-            if (arr[i] > max)
-            {
-                max = arr[i];
-            }
+            
         }
-        return max;
     }
 }
 */
+
+//create 2 array to store 5 student names
+//and to store 5 students marks respectively
+//create a method to get student name with highest marks
+
+using System;
+namespace DAY10METHODS
+{
+    internal class Program
+    {        static void Main(string[] args)
+        {
+            string[] studentNames = { "Tushar", "Sahil", "Hrithil", "Agam", "Nandini" };
+            int[] studentMarks = { 85, 92, 78, 90, 88 };
+
+            string topStudent = GetTopStudent(studentNames, studentMarks);
+            Console.WriteLine($"Top student is : {topStudent}");
+        }
+        static string GetTopStudent(string[] names, int[] marks)
+        {
+            int highestMarks = -1;// assuming marks are non-negative
+            string topStudent = "";// to store name of top student
+            for(int i =0; i< names.Length; i++)//iterate through all students
+            {
+                if(marks[i]> highestMarks) //check if current student has highest marks
+                {
+                    highestMarks  = marks[i]; //update highest marks
+                    topStudent = names[i]; //update top student name 
+                }
+            }
+            return topStudent;
+        }
+    }      
+}

@@ -18,6 +18,4 @@ namespace CS_Learning
         }
     }
 }*/
-string name = "Tushar Singh";
-int value = 12345;
-Console.WriteLine("Name: {0}, Value: {1}", name, value);
+Console.WriteLine($"{176573847:C}");

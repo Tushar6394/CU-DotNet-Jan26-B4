@@ -143,3 +143,16 @@ namespace SalesOrderProcessing
         }
     }
 }
+
+
+//Create a method to display a line.
+// Multiple options to call the method -
+// 1. Don’t pass anything
+//     1. Display line of 40 ‘-‘
+//     2. ———————————
+// 2. Pass a character like +
+//     1. Display 40 +
+//     2. ++++++++++++++=
+// 3. Pass character ‘$’ and a number like 60
+//     1. Display 60$
+//     2. $$$$$$$$$$$$$$$
