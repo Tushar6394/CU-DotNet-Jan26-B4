@@ -97,7 +97,7 @@
 //         contrEmpDirect.DisplayEmployeeDetails();
 //     }
 // }
-namespace first{
+namespace Excercise2_Inheritance{
 
     class Employee{
        
