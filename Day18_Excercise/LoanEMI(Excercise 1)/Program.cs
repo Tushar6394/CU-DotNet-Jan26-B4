@@ -93,3 +93,4 @@ namespace Day18_LoanEMICalculation
         }
     }
 }
+//Learn the inheritance concept and complete the Main method to create objects of each derived class and calculate their EMIs. Dynamically typed references should be used to call the CalculateEMI method.
