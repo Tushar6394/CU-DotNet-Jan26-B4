@@ -1,0 +1,46 @@
+class Program
+{
+    static int GCD(int a, int b)
+    {
+        while (b != 0)
+        {
+            int temp = b;
+            b = a % b;
+            a = temp;
+        }
+        return a;
+    }
+    static int LCM(int a, int b)
+    {
+        return (a * b) / GCD(a, b);
+    }
+
+    static void Main()
+    {
+        var firstLine = Console.ReadLine().Split().Select(int.Parse).ToArray();
+        int n = firstLine[0];
+        int m = firstLine[1];
+        int[] a = Console.ReadLine().Split().Select(int.Parse).ToArray();
+        int[] b = Console.ReadLine().Split().Select(int.Parse).ToArray();
+        int lcmA = a[0];
+        for (int i = 1; i < a.Length; i++)
+        {
+            lcmA = LCM(lcmA, a[i]);
+        }
+        int gcdB = b[0];
+        for (int i = 1; i < b.Length; i++)
+        {
+            gcdB = GCD(gcdB, b[i]);
+        }
+        int count = 0;
+        for (int x = lcmA; x <= gcdB; x += lcmA)
+        {
+            if (gcdB % x == 0)
+            {
+                count++;
+            }
+        }
+
+        Console.WriteLine(count);
+    }
+}
