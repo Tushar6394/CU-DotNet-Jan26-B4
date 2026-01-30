@@ -134,7 +134,7 @@ namespace DAY18
                 Degree = string.Empty;
                 College = string.Empty;
             }
-            
+
             public Student(string degree, string college)
             {
                 Degree = degree;
