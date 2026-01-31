@@ -379,6 +379,3 @@ namespace StudentManagement
         }
     }
 }
-
-
-//create a string with dummy pan card numbers we have to create a method validate the pan numbers also like if pan number is true then print valid number otherwise false
