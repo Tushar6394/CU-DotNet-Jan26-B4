@@ -2,7 +2,6 @@
 {
     public class Patient
     {
-        //Base Class
         public string Name{get; set;}
         public decimal BaseFee{get; set;}
         public Patient(string name, decimal baseFee)
@@ -15,7 +14,6 @@
             return BaseFee;
         }
     }
-    //2. Impatient Sub Class
     public class Impatient : Patient
     {
         public int DaysStayed{get; set;}
@@ -30,7 +28,6 @@
             return BaseFee + (DaysStayed * DailyRate);
         }
     }
-    //3. Outpatient Sub Class
     public class Outpatient : Patient
     {
         public decimal ProcedureFee{get; set;}
@@ -43,7 +40,6 @@
             return BaseFee + ProcedureFee;
         }
     }
-    //4. Emergency Patient Sub Class
     public class EmergencyPatient : Patient
     {
         public int SeverityLevel{get; set;}
@@ -110,4 +106,5 @@
             Console.WriteLine("Total Inpatients: " + inpatientCount);
         }
     }
+
 }
