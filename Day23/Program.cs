@@ -164,7 +164,7 @@ namespace OOPSLearning
             catch(SalaryOutOfRangeException ex)
             {
                 Console.WriteLine(ex.Message + " - " 
-                    + ex.StackTrace);
+                    + ex.StackTrace); 
             }
             catch(Exception ex)
             {
@@ -180,3 +180,5 @@ namespace OOPSLearning
         }
     }
 }
+
+
