@@ -41,7 +41,7 @@ namespace HangManGame
 
                 if (guessedLetters.Contains(guess))
                 {
-                    Console.WriteLine($"You already guessed '{guess}'. Try again.");
+                    Console.WriteLine($"You already guess₹ed '{guess}'. Try again.");
                     continue;
                 }
 
