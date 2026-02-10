@@ -1,132 +1,172 @@
 ﻿using System;
-using System.IO;
 using System.Collections.Generic;
+using System.IO;
 
-namespace Week5_Assessment
+namespace FreightSystem
 {
-    [Flags]
-    public enum PackageState { None = 0, Fragile = 1, Reinforced = 2 }
-
+    // Custom Exception 1
     public class RestrictedDestinationException : Exception
     {
-        public string DeniedLocation { get; }
-        public RestrictedDestinationException(string loc)
-            : base($"Forbidden: {loc}")
+        public RestrictedDestinationException(string message)
+            : base(message)
         {
-            DeniedLocation = loc;
         }
     }
 
+    // Custom Exception 2
     public class InsecurePackagingException : Exception
     {
-        public InsecurePackagingException(string msg) : base(msg) { }
+        public InsecurePackagingException(string message)
+            : base(message)
+        {
+        }
     }
 
+    // Interface
     public interface ILoggable
     {
-        void SaveLog(string msg);
+        void SaveLog(string message);
     }
 
+    // Log Manager
+    public class LogManager : ILoggable
+    {
+        private string filePath = "shipment_audit.log";
+
+        public void SaveLog(string message)
+        {
+            using (StreamWriter writer = new StreamWriter(filePath, true))
+            {
+                writer.WriteLine(DateTime.Now + " : " + message);
+            }
+        }
+    }
+
+    // Abstract Base Class
     public abstract class Shipment
     {
-        public string TrackingId { get; init; }
-        public double Weight { get; init; }
-        public string Destination { get; init; }
-        public PackageState State { get; init; }
+        public string TrackingId { get; set; }
+        public double Weight { get; set; }
+        public string Destination { get; set; }
+        public bool Fragile { get; set; }
+        public bool Reinforced { get; set; }
+
+        protected List<string> restrictedZones = new List<string>
+        {
+            "North Pole",
+            "Unknown Island"
+        };
 
         public abstract void ProcessShipment();
     }
 
-    public sealed class ExpressShipment : Shipment
+    // Express Shipment
+    public class ExpressShipment : Shipment
     {
         public override void ProcessShipment()
         {
             if (Weight <= 0)
-                throw new ArgumentOutOfRangeException(nameof(Weight));
+                throw new ArgumentOutOfRangeException("Weight must be greater than zero.");
 
-            if (State.HasFlag(PackageState.Fragile) &&
-                !State.HasFlag(PackageState.Reinforced))
-                throw new InsecurePackagingException("Packaging check failed.");
+            if (restrictedZones.Contains(Destination))
+                throw new RestrictedDestinationException("Restricted destination: " + Destination);
 
-            Console.WriteLine($"Express {TrackingId} processed.");
+            if (Fragile && !Reinforced)
+                throw new InsecurePackagingException("Fragile item must be reinforced.");
+
+            Console.WriteLine("Express shipment " + TrackingId + " processed successfully.");
         }
     }
 
-    public sealed class HeavyFreight : Shipment
+    // Heavy Freight
+    public class HeavyFreight : Shipment
     {
-        private static readonly string[] Blacklist =
-            { "North Pole", "Unknown Island" };
+        public bool HasHeavyLiftPermit { get; set; }
 
         public override void ProcessShipment()
         {
             if (Weight <= 0)
-                throw new ArgumentOutOfRangeException(nameof(Weight));
+                throw new ArgumentOutOfRangeException("Weight must be greater than zero.");
 
-            if (Blacklist.Any(d =>
-                d.Equals(Destination, StringComparison.OrdinalIgnoreCase)))
-                throw new RestrictedDestinationException(Destination);
+            if (restrictedZones.Contains(Destination))
+                throw new RestrictedDestinationException("Restricted destination: " + Destination);
 
-            if (Weight > 1000)
-                Console.WriteLine("Heavy Lift permit required.");
+            if (Fragile && !Reinforced)
+                throw new InsecurePackagingException("Fragile item must be reinforced.");
 
-            Console.WriteLine($"Freight {TrackingId} processed.");
+            if (Weight > 1000 && !HasHeavyLiftPermit)
+                throw new Exception("Heavy Lift permit required.");
+
+            Console.WriteLine("Heavy freight " + TrackingId + " processed successfully.");
         }
     }
 
-    public class LogManager : ILoggable
+    class Program
     {
-        public void SaveLog(string msg)
+        static void Main(string[] args)
         {
-            using var sw = new StreamWriter("shipment_audit.log", true);
-            sw.WriteLine($"[{DateTime.Now}] {msg}");
-        }
-    }
+            ILoggable logger = new LogManager();
 
-    public static class Program
-    {
-        public static void Main()
-        {
-            ILoggable log = new LogManager();
-
-            var pipeline = new List<Shipment>
+            List<Shipment> shipments = new List<Shipment>
             {
-                new HeavyFreight { TrackingId = "TUS123", Weight = 12000, Destination = "Oslo" },
-                new ExpressShipment { TrackingId = "SAI123", Weight = 100, State = PackageState.Fragile },
-                new HeavyFreight { TrackingId = "AMA123", Weight = 400, Destination = "North Pole" }
+                new ExpressShipment
+                {
+                    TrackingId = "EXP001",
+                    Weight = 10,
+                    Destination = "Delhi",
+                    Fragile = false,
+                    Reinforced = false
+                },
+                new ExpressShipment
+                {
+                    TrackingId = "EXP002",
+                    Weight = -5,
+                    Destination = "Mumbai",
+                    Fragile = false,
+                    Reinforced = false
+                },
+                new ExpressShipment
+                {
+                    TrackingId = "EXP003",
+                    Weight = 20,
+                    Destination = "North Pole",
+                    Fragile = false,
+                    Reinforced = false
+                },
+                new HeavyFreight
+                {
+                    TrackingId = "HF001",
+                    Weight = 1500,
+                    Destination = "Chandigarh",
+                    Fragile = true,
+                    Reinforced = false,
+                    HasHeavyLiftPermit = false
+                }
             };
 
-            foreach (var s in pipeline)
+            foreach (var shipment in shipments)
             {
-                string res;
-
                 try
                 {
-                    s.ProcessShipment();
-                    res = $"SUCCESS: {s.TrackingId}";
+                    shipment.ProcessShipment();
+                    logger.SaveLog("SUCCESS: " + shipment.TrackingId + " processed.");
                 }
                 catch (RestrictedDestinationException ex)
                 {
-                    res = $"SECURITY ALERT ({s.TrackingId}): {ex.Message}";
+                    logger.SaveLog("SECURITY ALERT: " + shipment.TrackingId + " - " + ex.Message);
                 }
                 catch (ArgumentOutOfRangeException ex)
                 {
-                    res = $"DATA ENTRY ERROR ({s.TrackingId}): {ex.Message}";
-                }
-                catch (InsecurePackagingException ex)
-                {
-                    res = $"PACKAGING ERROR ({s.TrackingId}): {ex.Message}";
+                    logger.SaveLog("DATA ERROR: " + shipment.TrackingId + " - " + ex.Message);
                 }
                 catch (Exception ex)
                 {
-                    res = $"GENERAL ERROR ({s.TrackingId}): {ex.Message}";
+                    logger.SaveLog("GENERAL ERROR: " + shipment.TrackingId + " - " + ex.Message);
                 }
                 finally
                 {
-                    Console.WriteLine(
-                        $"Processing attempt finished for ID: {s.TrackingId}");
+                    Console.WriteLine("Processing attempt finished for ID: " + shipment.TrackingId);
                 }
-
-                log.SaveLog(res);
             }
         }
     }
