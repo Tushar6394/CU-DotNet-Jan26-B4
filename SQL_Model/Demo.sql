@@ -1,0 +1,45 @@
+-- -- 1. Drop the Stored Procedures
+-- DROP PROCEDURE IF EXISTS [dbo].[CustOrderHist];
+-- DROP PROCEDURE IF EXISTS [dbo].[CustOrdersDetail];
+-- DROP PROCEDURE IF EXISTS [dbo].[CustOrdersOrders];
+-- DROP PROCEDURE IF EXISTS [dbo].[Ten Most Expensive Products];
+-- DROP PROCEDURE IF EXISTS [dbo].[Employee Sales by Country];
+-- DROP PROCEDURE IF EXISTS [dbo].[Sales by Year];
+-- GO
+
+-- -- 2. Drop the Views
+-- DROP VIEW IF EXISTS [dbo].[Alphabetical list of products];
+-- DROP VIEW IF EXISTS [dbo].[Current Product List];
+-- DROP VIEW IF EXISTS [dbo].[Orders Qry];
+-- DROP VIEW IF EXISTS [dbo].[Products Above Average Price];
+-- DROP VIEW IF EXISTS [dbo].[Product Sales for 1997];
+-- DROP VIEW IF EXISTS [dbo].[Sales by Category];
+-- DROP VIEW IF EXISTS [dbo].[Category Sales for 1997];
+-- DROP VIEW IF EXISTS [dbo].[Invoices];
+-- DROP VIEW IF EXISTS [dbo].[Order Details Extended];
+-- DROP VIEW IF EXISTS [dbo].[Order Subtotals];
+-- DROP VIEW IF EXISTS [dbo].[Product Sales for 1997];
+-- DROP VIEW IF EXISTS [dbo].[Sales Totals by Amount];
+-- DROP VIEW IF EXISTS [dbo].[Summary of Sales by Quarter];
+-- DROP VIEW IF EXISTS [dbo].[Summary of Sales by Year];
+-- DROP VIEW IF EXISTS [dbo].[Customer and Suppliers by City];
+-- DROP VIEW IF EXISTS [dbo].[Products by Category];
+-- DROP VIEW IF EXISTS [dbo].[Quarterly Orders];
+
+-- GO
+
+-- -- 3. Drop the Tables (Ordered to handle dependencies)
+-- DROP TABLE IF EXISTS [dbo].[Order Details];
+-- DROP TABLE IF EXISTS [dbo].[Orders];
+-- DROP TABLE IF EXISTS [dbo].[Products];
+-- DROP TABLE IF EXISTS [dbo].[Categories];
+-- DROP TABLE IF EXISTS [dbo].[Customers];
+-- DROP TABLE IF EXISTS [dbo].[Shippers];
+-- DROP TABLE IF EXISTS [dbo].[Suppliers];
+-- DROP TABLE IF EXISTS [dbo].[EmployeeTerritories];
+-- DROP TABLE IF EXISTS [dbo].[Territories];
+-- DROP TABLE IF EXISTS [dbo].[Region];
+-- DROP TABLE IF EXISTS [dbo].[Employees];
+-- DROP TABLE IF EXISTS [dbo].[CustomerCustomerDemo];
+-- DROP TABLE IF EXISTS [dbo].[CustomerDemographics];
+-- GO
