@@ -50,3 +50,14 @@ where UnitPrice > ALL(select UnitPrice from Products where ProductName like 'A%'
 select ProductName, UnitPrice
 from Products
 where UnitPrice > ALL(select UnitPrice from Products where ProductName like 'A%'); -- unrelated subquery
+
+--If we want to display NULL values from the left table, we can use LEFT JOIN. 
+--If we want to display NULL values from the right table, we can use RIGHT JOIN. 
+--If we want to display only matching records, we can use INNER JOIN.
+select c.CategoryName, p.ProductName
+from Categories as C
+full join Products as P
+on c.CategoryID = p.CategoryID
+where c.CategoryName is null
+or p.CategoryID is null;
+
