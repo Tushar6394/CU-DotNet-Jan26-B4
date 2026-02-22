@@ -314,47 +314,103 @@
 
 
 ///////////////Interface Segregation Principle Example //////////////////////////
+// using System;
+// interface IPrinter
+// {
+//     void Print();
+// }
+// interface IScanner
+// {
+//     void Scan();
+// }
+// class SimplePrinter : IPrinter
+// {
+//     public void Print()
+//     {
+//         Console.WriteLine("Simple Printer: Printing...");
+//     }
+// }
+
+// class MultiFunctionPrinter : IPrinter, IScanner
+// {
+//     public void Print()
+//     {
+//         Console.WriteLine("MultiFunction Printer: Printing...");
+//     }
+
+//     public void Scan()
+//     {
+//         Console.WriteLine("MultiFunction Printer: Scanning...");
+//     }
+// }
+
+// class Program
+// {
+//     static void Main()
+//     {
+//         SimplePrinter sp = new SimplePrinter();
+//         sp.Print();
+
+//         Console.WriteLine();
+
+//         MultiFunctionPrinter mp = new MultiFunctionPrinter();
+//         mp.Print();
+//         mp.Scan();
+//     }
+// }
+
+
+
 using System;
-interface IPrinter
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace CommonInsertion_Sort
 {
-    void Print();
-}
-interface IScanner
-{
-    void Scan();
-}
-class SimplePrinter : IPrinter
-{
-    public void Print()
+    class Program
     {
-        Console.WriteLine("Simple Printer: Printing...");
-    }
-}
+        static void Main(string[] args)
+        {
+            // Create an array of integers for sorting
+            int[] numbers = new int[10] { 2, 5, -4, 11, 0, 18, 22, 67, 51, 6 };
 
-class MultiFunctionPrinter : IPrinter, IScanner
-{
-    public void Print()
-    {
-        Console.WriteLine("MultiFunction Printer: Printing...");
-    }
+            // Display original array elements
+            Console.WriteLine("\nOriginal Array Elements :");
+            PrintIntegerArray(numbers);
 
-    public void Scan()
-    {
-        Console.WriteLine("MultiFunction Printer: Scanning...");
-    }
-}
+            // Perform Insertion Sort and display the sorted array elements
+            Console.WriteLine("\nSorted Array Elements :");
+            PrintIntegerArray(InsertionSort(numbers));
+            Console.WriteLine("\n");
+        }
 
-class Program
-{
-    static void Main()
-    {
-        SimplePrinter sp = new SimplePrinter();
-        sp.Print();
+        // Method implementing Insertion Sort algorithm
+        static int[] InsertionSort(int[] inputArray)
+        {
+            for (int i = 0; i < inputArray.Length - 1; i++)
+            {
+                for (int j = i + 1; j > 0; j--)
+                {
+                    // Swap if the element at j - 1 position is greater than the element at j position
+                    if (inputArray[j - 1] > inputArray[j])
+                    {
+                        int temp = inputArray[j - 1];
+                        inputArray[j - 1] = inputArray[j];
+                        inputArray[j] = temp;
+                    }
+                }
+            }
+            return inputArray; // Return the sorted array
+        }
 
-        Console.WriteLine();
-
-        MultiFunctionPrinter mp = new MultiFunctionPrinter();
-        mp.Print();
-        mp.Scan();
+        // Method to print integer array elements
+        public static void PrintIntegerArray(int[] array)
+        {
+            foreach (int i in array)
+            {
+                Console.Write(i.ToString() + "  "); // Display each element followed by a space
+            }
+        }
     }
 }
