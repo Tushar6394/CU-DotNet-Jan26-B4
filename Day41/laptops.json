@@ -1,0 +1,17 @@
+[
+  {
+    "LaptopId": 1,
+    "ModelName": "XPS 13",
+    "Price": 100000
+  },
+  {
+    "LaptopId": 2,
+    "ModelName": "MacBook Pro",
+    "Price": 150000
+  },
+  {
+    "LaptopId": 3,
+    "ModelName": "Spectre x360",
+    "Price": 120000
+  }
+]
