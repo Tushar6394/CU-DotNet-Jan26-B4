@@ -1,0 +1,107 @@
+<!-- Create a Web Entry Form for any Entity 
+of your choice to gather information.
+Use all types of inputs and their attributes.
+Use Table to align Labels and controls. -->
+<!-- College Admission -->
+ <!-- add everything in this like in college admission form. Name, email, date of birth, gender, course, skills, address, photo upload, submit and reset buttons. -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entity Form</title>
+</head>
+<body>
+    <h1 style ="text-align: center;">College Admission Form</h1>
+    <form action="/submit-registration">
+    <table>
+        <tr>
+            <td><label for="name">Name:</label></td>
+            <td><input type="text" id="name" name="name" required></td>
+        </tr>
+        <tr>
+            <td><label for="email">Email:</label></td>
+            <td><input type="email" id="email" name="email" required></td>
+        </tr>
+        <tr>
+            <td><label for="dob">Date of Birth:</label></td>
+            <td><input type="date" id="dob" name="dob" required></td>
+        </tr>
+        <tr>
+            <td><label for="gender">Gender:</label></td>
+            <td>
+                <input type="radio" id="male" name="gender" value="male" required>
+                <label for="male">Male</label>
+                <input type="radio" id="female" name="gender" value="female" required>
+                <label for="female">Female</label>
+                <input type="radio" id="other" name="gender" value="other" required>
+                <label for="other">Other</label>
+            </td>
+        </tr>
+        <tr>
+            <td><label for="course">Course:</label></td>
+            <td>
+                <select id="course" name="course" required>
+                    <option value="">Select a course</option>
+                    <option value="computer_science">Computer Science</option>
+                    <option value="business">Business</option>
+                    <option value="engineering">Engineering</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td><label for="skills">Skills:</label></td>
+            <td>
+                <input type="checkbox" id="programming" name="skills" value="programming">
+                <label for="programming">Programming</label>
+                <input type="checkbox" id="communication" name="skills" value="communication">
+                <label for="communication">Communication</label>
+                <input type="checkbox" id="leadership" name="skills" value="leadership">
+                <label for="leadership">Leadership</label>
+            </td>
+        </tr>
+        <tr>
+            <td><label for="Academic Information">Academic Information:</label></td>
+            <td><textarea id="academic_info" name="academic_info" rows="4" cols="50" required></textarea></td>
+            
+
+        </tr>
+        <tr>
+            <td><label for="phone">Phone Number:</label></td>
+            <td><input type="tel" id="phone" name="phone" pattern="[0-9]{10}" required></td>
+        </tr>
+        <tr>
+            <td><label for="website">Personal Website:</label></td>
+            <td><input type="url" id="website" name="website"></td>
+        </tr>
+        <tr>
+            <td><label for="sports">Sports:</label></td>
+            <td>
+                <input type="checkbox" id="cricket" name="sports" value="cricket">
+                <label for="cricket">Cricket</label>
+                <input type="checkbox" id="football" name="sports" value="football">
+                <label for="football">Football</label>
+                <input type="checkbox" id="basketball" name="sports" value="basketball">
+                <label for="basketball">Basketball</label>
+            </td>
+        </tr>
+        <tr>
+            <td><label for="address">Address:</label></td>
+            <td><textarea id="address" name="address" rows="4" cols="50" required></textarea></td>
+        </tr>
+        <tr>
+            <td><label for="photo">Upload Photo:</label></td>
+            <td><input type="file" id="photo" name="photo" accept="image/*" required></td>
+        </tr>
+        <tr>
+            <td colspan="2" style="text-align: center;"><input type="submit" value="Submit"></td>
+        </tr>
+        <tr>
+            <td colspan="2" style="text-align: center;"><input type="reset" value="Reset"></td>
+        </tr>
+        <tr>
+            <td colspan="2" style="text-align: center;"><button type="button" onclick="alert('Form Submitted!')">Submit with Alert</button></td>
+        </tr>
+    </table>
+</body>
+</html>
