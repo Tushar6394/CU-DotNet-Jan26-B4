@@ -1,0 +1,29 @@
+@{
+    ViewData["Title"] = "Products";
+}
+
+<section class="mb-4">
+    <h1 class="display-6 fw-bold">Products</h1>
+    <p class="text-secondary">Browse our product categories, then open the detailed software and tools pages for tables and badges.</p>
+</section>
+
+<div class="row g-4">
+    <div class="col-md-6">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <h2 class="h4">Software</h2>
+                <p>Business-ready applications for reporting, workflow automation, and internal operations.</p>
+                <a class="btn btn-primary" asp-action="Software">View Software</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <h2 class="h4">Tools</h2>
+                <p>Small utility tools and accelerators that help teams work faster and more consistently.</p>
+                <a class="btn btn-primary" asp-action="Tools">View Tools</a>
+            </div>
+        </div>
+    </div>
+</div>

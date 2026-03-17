@@ -1,0 +1,41 @@
+@{
+    ViewData["Title"] = "Tools";
+}
+
+<section class="mb-4">
+    <h1 class="display-6 fw-bold">Utility Tools</h1>
+    <p class="text-secondary">Tool catalog with Bootstrap table formatting and status badges.</p>
+</section>
+
+<div class="table-responsive shadow-sm rounded-4 overflow-hidden">
+    <table class="table table-bordered align-middle mb-0">
+        <thead class="table-light">
+            <tr>
+                <th>Tool</th>
+                <th>Purpose</th>
+                <th>Version</th>
+                <th>Availability</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>DeployCheck</td>
+                <td>Pre-release validation</td>
+                <td>2.1</td>
+                <td><span class="badge rounded-pill text-bg-success">Ready</span></td>
+            </tr>
+            <tr>
+                <td>DocSnap</td>
+                <td>Quick documentation exports</td>
+                <td>1.4</td>
+                <td><span class="badge rounded-pill text-bg-secondary">Internal</span></td>
+            </tr>
+            <tr>
+                <td>TraceView</td>
+                <td>Error and log inspection</td>
+                <td>3.0</td>
+                <td><span class="badge rounded-pill text-bg-info">Preview</span></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
