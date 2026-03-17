@@ -1,0 +1,32 @@
+﻿@{
+    ViewData["Title"] = "TechStream Pulse Portal";
+}
+
+<section class="hero-card p-4 p-md-5">
+    <p class="text-uppercase fw-semibold small mb-2">Internal Read-Only Portal</p>
+    <h1 class="display-5 fw-bold mb-3">Corporate Pulse at a Glance</h1>
+    <p class="lead mb-4">Monitor department status, daily announcement, and live team insights from one clean dashboard.</p>
+    <a class="btn btn-primary btn-lg" asp-controller="Company" asp-action="Dashboard">Open Dashboard</a>
+</section>
+
+<section class="row mt-4 g-3">
+    <div class="col-md-4">
+        <div class="feature-card p-3 h-100">
+            <h5 class="fw-bold">Strongly Typed Data</h5>
+            <p class="mb-0">Employee entity data rendered through Razor with type safety and maintainable structure.</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="feature-card p-3 h-100">
+            <h5 class="fw-bold">ViewBag Metadata</h5>
+            <p class="mb-0">Dynamic daily announcement highlights key communication for all staff.</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="feature-card p-3 h-100">
+            <h5 class="fw-bold">ViewData Signals</h5>
+            <p class="mb-0">Department and server state exposed as environment configuration details.</p>
+        </div>
+    </div>
+</section>
+</div>

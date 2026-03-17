@@ -1,0 +1,80 @@
+@model List<Employee>
+
+@{
+    ViewData["Title"] = "Corporate Pulse Dashboard";
+    var isDepartmentActive = (bool)(ViewData["IsDepartmentActive"] ?? false);
+    var departmentName = ViewData["DepartmentName"]?.ToString() ?? "Department";
+    var serverStatus = ViewData["ServerStatus"]?.ToString() ?? "Unknown";
+    var totalEmployees = (int)(ViewData["TotalEmployees"] ?? 0);
+    var averageSalary = (decimal)(ViewData["AverageSalary"] ?? 0m);
+}
+
+<section class="dashboard-hero p-4 p-md-5 mb-4">
+    <div class="d-flex flex-column flex-lg-row justify-content-between gap-3 align-items-start align-items-lg-center">
+        <div>
+            <p class="text-uppercase small fw-semibold mb-2">Corporate Pulse</p>
+            <h2 class="fw-bold mb-1">@departmentName Command Center</h2>
+            <p class="mb-0 text-secondary">Last updated: @ViewBag.LastUpdated</p>
+        </div>
+        <span class="status-badge @(isDepartmentActive ? "status-badge-active" : "status-badge-maintenance")">
+            <span class="status-dot"></span>
+            @(isDepartmentActive ? "Active" : "Under Maintenance")
+        </span>
+    </div>
+</section>
+
+<div class="announcement-banner p-3 p-md-4 mb-4">
+    <p class="small text-uppercase fw-semibold mb-2">Daily Announcement</p>
+    <h5 class="mb-0">@ViewBag.DailyAnnouncement</h5>
+</div>
+
+<section class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="kpi-card p-3 h-100">
+            <p class="text-muted mb-1">Total Employees</p>
+            <h3 class="fw-bold mb-0">@totalEmployees</h3>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="kpi-card p-3 h-100">
+            <p class="text-muted mb-1">Average Salary</p>
+            <h3 class="fw-bold mb-0">@averageSalary.ToString("C0")</h3>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="kpi-card p-3 h-100">
+            <p class="text-muted mb-1">Server Status</p>
+            <h3 class="fw-bold mb-0">@serverStatus</h3>
+        </div>
+    </div>
+</section>
+
+<section class="table-shell team-directory-shell p-3 p-md-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4 class="fw-bold mb-0">Team Directory</h4>
+        <span class="status-pill">Read-Only View</span>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Position</th>
+                    <th class="text-end">Salary</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var employee in Model)
+                {
+                    <tr>
+                        <td>@employee.Id</td>
+                        <td class="fw-semibold">@employee.Name</td>
+                        <td>@employee.Position</td>
+                        <td class="text-end">@employee.Salary.ToString("C0")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</section>

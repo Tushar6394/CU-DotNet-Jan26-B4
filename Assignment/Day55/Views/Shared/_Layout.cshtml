@@ -1,0 +1,83 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Day55</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Day55.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark header-gradient border-bottom soft-shadow mb-3">
+            <div class="container-fluid">
+                <a class="navbar-brand brand-mark" asp-area="" asp-controller="Home" asp-action="Index" aria-label="TechStream Pulse Home">
+                    <span class="brand-logo" aria-hidden="true">
+                        <svg viewBox="0 0 48 48" role="img" focusable="false">
+                            <path d="M8 24h10l4-10 6 20 4-10h8" />
+                            <circle cx="24" cy="24" r="17" />
+                        </svg>
+                    </span>
+                    <span class="brand-text-wrap">
+                        <span class="brand-tech">TechStream</span>
+                        <span class="brand-pulse">Pulse</span>
+                    </span>
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-end">
+                    <ul class="navbar-nav ms-auto nav-symbol-group">
+                        <li class="nav-item">
+                            <a class="nav-link nav-symbol-link" asp-area="" asp-controller="Home" asp-action="Index" aria-label="Home">
+                                <svg class="nav-symbol-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                                    <path d="M3 11.5L12 4l9 7.5" />
+                                    <path d="M5.5 10.5V20h13V10.5" />
+                                </svg>
+                                <span class="visually-hidden">Home</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link nav-symbol-link" asp-area="" asp-controller="Company" asp-action="Dashboard" aria-label="Dashboard">
+                                <svg class="nav-symbol-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                                    <rect x="3" y="4" width="8" height="7" rx="1.5" />
+                                    <rect x="13" y="4" width="8" height="5" rx="1.5" />
+                                    <rect x="3" y="13" width="8" height="7" rx="1.5" />
+                                    <rect x="13" y="11" width="8" height="9" rx="1.5" />
+                                </svg>
+                                <span class="visually-hidden">Dashboard</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link nav-symbol-link" asp-area="" asp-controller="Home" asp-action="Privacy" aria-label="Privacy">
+                                <svg class="nav-symbol-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                                    <path d="M12 3l7 3v5c0 5-2.5 8.6-7 10-4.5-1.4-7-5-7-10V6l7-3z" />
+                                    <path d="M9.5 12l2 2.2 3-3.4" />
+                                </svg>
+                                <span class="visually-hidden">Privacy</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container-fluid app-shell px-3 px-md-4">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2026 - Day55 - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
