@@ -1,0 +1,42 @@
+@{
+    ViewData["Title"] = "Market Summary";
+    var topGainer = (string?)ViewData["TopGainer"] ?? "N/A";
+    var volume = (long?)ViewData["Volume"] ?? 0;
+    var isOpen = ((string?)ViewBag.MarketStatus)?.Contains("Open") == true;
+    var recentSignals = ViewBag.RecentSignals as List<Week10Assessment.Models.Transaction>;
+}
+
+<section class="hero-panel mb-4">
+    <div>
+        <p class="eyebrow mb-2">Data Passing Demo</p>
+        <h1 class="display-6 mb-2">Market Summary</h1>
+        <p class="text-secondary mb-0">This page intentionally avoids a model and uses ViewBag and ViewData.</p>
+    </div>
+</section>
+
+<div class="alert @(isOpen ? "alert-success" : "alert-danger") shadow-sm" role="alert">
+    <strong>Status:</strong> @ViewBag.MarketStatus
+</div>
+
+<div class="card border-0 finance-card shadow-sm">
+    <div class="card-body">
+        <h5 class="card-title">Top Gainer</h5>
+        <p class="card-text fs-4 fw-bold mb-2">@topGainer</p>
+        <p class="text-secondary mb-0">Volume: @volume.ToString("N0")</p>
+    </div>
+</div>
+
+@if (recentSignals is not null && recentSignals.Any())
+{
+    <div class="card border-0 finance-card shadow-sm mt-3">
+        <div class="card-body">
+            <h6 class="mb-3">Recent Market Signals</h6>
+            <ul class="mb-0">
+                @foreach (var signal in recentSignals)
+                {
+                    <li>@signal.Date.ToString("dd MMM"): @signal.Description (@signal.Category)</li>
+                }
+            </ul>
+        </div>
+    </div>
+}

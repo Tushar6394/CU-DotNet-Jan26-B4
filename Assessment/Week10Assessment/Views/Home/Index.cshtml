@@ -1,0 +1,41 @@
+﻿@{
+    ViewData["Title"] = "Home";
+}
+
+<section class="hero-panel mb-4">
+    <div>
+        <p class="eyebrow mb-2">Week 10 Assessment</p>
+        <h1 class="display-6 mb-2">FinTrack Pro</h1>
+        <p class="mb-0">Multi-controller ASP.NET Core MVC finance architecture using EF Core, in-memory state, and advanced data passing.</p>
+    </div>
+</section>
+
+<div class="row g-3">
+    <div class="col-md-4">
+        <div class="card finance-card border-0 h-100">
+            <div class="card-body">
+                <h3 class="h5">Account Module</h3>
+                <p class="text-secondary">Persistent account records stored with Entity Framework Core.</p>
+                <a asp-controller="Account" asp-action="Index" class="btn btn-finance">Open Accounts</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card finance-card border-0 h-100">
+            <div class="card-body">
+                <h3 class="h5">Portfolio Module</h3>
+                <p class="text-secondary">In-memory assets with custom attribute routes and TempData messaging.</p>
+                <a asp-controller="Portfolio" asp-action="Index" class="btn btn-finance">Open Portfolio</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card finance-card border-0 h-100">
+            <div class="card-body">
+                <h3 class="h5">Market Module</h3>
+                <p class="text-secondary">Model-free summary powered entirely by ViewBag and ViewData.</p>
+                <a asp-controller="Market" asp-action="Summary" class="btn btn-finance">Open Market</a>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,65 @@
+@model Week10Assessment.Models.TransferViewModel
+@{
+    ViewData["Title"] = "Transfer Money";
+}
+
+<section class="hero-panel mb-4">
+    <div>
+        <p class="eyebrow mb-2">P2P Transfer</p>
+        <h1 class="display-6 mb-2">Send Money</h1>
+        <p class="mb-0">Transfer funds from one person to another. This records both Debit and Credit entries.</p>
+    </div>
+</section>
+
+<div class="card finance-card border-0 shadow-sm">
+    <div class="card-body p-4">
+        <form asp-action="Transfer" method="post" novalidate>
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label asp-for="FromAccountId" class="form-label"></label>
+                    <select asp-for="FromAccountId" asp-items="ViewBag.AccountOptions" class="form-select">
+                        <option value="">Select sender account</option>
+                    </select>
+                    <span asp-validation-for="FromAccountId" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6">
+                    <label asp-for="ToAccountId" class="form-label"></label>
+                    <select asp-for="ToAccountId" asp-items="ViewBag.AccountOptions" class="form-select">
+                        <option value="">Select receiver account</option>
+                    </select>
+                    <span asp-validation-for="ToAccountId" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-4">
+                    <label asp-for="Amount" class="form-label"></label>
+                    <input asp-for="Amount" class="form-control" />
+                    <span asp-validation-for="Amount" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-4">
+                    <label asp-for="Date" class="form-label"></label>
+                    <input asp-for="Date" class="form-control" />
+                    <span asp-validation-for="Date" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-4">
+                    <label asp-for="Description" class="form-label"></label>
+                    <input asp-for="Description" class="form-control" />
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="d-flex gap-2 mt-4">
+                <button type="submit" class="btn btn-finance">Submit Transfer</button>
+                <a asp-action="Index" class="btn btn-outline-secondary">Back</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

@@ -1,0 +1,27 @@
+@model Week10Assessment.Models.Asset
+@{
+    ViewData["Title"] = "Asset Details";
+}
+
+<div class="card border-0 finance-card shadow-sm">
+    <div class="card-body p-4">
+        <span class="badge text-bg-warning mb-2">Attribute Routed Page</span>
+        <h2 class="h4 mb-3">@Model.Ticker - @Model.Name</h2>
+
+        <dl class="row mb-0">
+            <dt class="col-sm-3">Sector</dt>
+            <dd class="col-sm-9">@Model.Sector</dd>
+
+            <dt class="col-sm-3">Units</dt>
+            <dd class="col-sm-9">@Model.Units</dd>
+
+            <dt class="col-sm-3">Unit Value</dt>
+            <dd class="col-sm-9">@Model.Value.ToString("C")</dd>
+
+            <dt class="col-sm-3">Holding Value</dt>
+            <dd class="col-sm-9 fw-semibold">@((Model.Units * Model.Value).ToString("C"))</dd>
+        </dl>
+
+        <a asp-action="Index" class="btn btn-finance mt-4">Back to Portfolio</a>
+    </div>
+</div>

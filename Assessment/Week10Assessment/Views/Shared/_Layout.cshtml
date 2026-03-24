@@ -1,0 +1,88 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - FinTrack Pro</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Week10Assessment.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <header class="site-header">
+        <nav class="navbar navbar-expand-lg navbar-dark py-3">
+            <div class="container-fluid">
+                <a class="navbar-brand fw-bold brand-wrap" asp-area="" asp-controller="Home" asp-action="Index">
+                    <img src="~/images/fintrack-logo.svg" asp-append-version="true" alt="FinTrack Pro logo" class="brand-logo" />
+                    <span class="brand-name">FinTrack Pro</span>
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse justify-content-end">
+                    <ul class="navbar-nav nav-pill-group">
+                        <li class="nav-item">
+                            <a class="nav-link nav-pill-link nav-link-with-icon" asp-area="" asp-controller="Home" asp-action="Index">
+                                <img src="~/images/nav/home.svg" asp-append-version="true" alt="Home" class="nav-logo" />
+                                <span>Home</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link nav-pill-link nav-link-with-icon" asp-area="" asp-controller="Account" asp-action="Index">
+                                <img src="~/images/nav/accounts.svg" asp-append-version="true" alt="Accounts" class="nav-logo" />
+                                <span>Accounts</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link nav-pill-link nav-link-with-icon" asp-area="" asp-controller="Account" asp-action="Transactions">
+                                <img src="~/images/nav/transactions.svg" asp-append-version="true" alt="Transactions" class="nav-logo" />
+                                <span>Transactions</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link nav-pill-link nav-link-with-icon" asp-area="" asp-controller="Portfolio" asp-action="Index">
+                                <img src="~/images/nav/portfolio.svg" asp-append-version="true" alt="Portfolio" class="nav-logo" />
+                                <span>Portfolio</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link nav-pill-link nav-link-with-icon" asp-area="" asp-controller="Market" asp-action="Summary">
+                                <img src="~/images/nav/market.svg" asp-append-version="true" alt="Market" class="nav-logo" />
+                                <span>Market</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link nav-pill-link nav-link-with-icon" asp-area="" asp-controller="Home" asp-action="Privacy">
+                                <img src="~/images/nav/privacy.svg" asp-append-version="true" alt="Privacy" class="nav-logo" />
+                                <span>Privacy</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container py-3">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="footer text-light mt-4">
+        <div class="container">
+            <div class="d-flex flex-wrap justify-content-between gap-2 py-3">
+                <span>&copy; 2026 FinTrack Pro</span>
+                <a class="footer-link" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            </div>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

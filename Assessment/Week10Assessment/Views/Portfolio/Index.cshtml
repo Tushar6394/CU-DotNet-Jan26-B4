@@ -1,0 +1,87 @@
+@model List<Week10Assessment.Models.Asset>
+@{
+    ViewData["Title"] = "Portfolio";
+    var total = (double)(ViewData["Total"] ?? 0d);
+    var projected = total + 500;
+    var lastMovement = ViewBag.LastMovement as Week10Assessment.Models.Transaction;
+}
+
+<section class="hero-panel mb-4">
+    <div>
+        <p class="eyebrow mb-2">In-Memory Assets</p>
+        <h1 class="display-6 mb-2">Portfolio Tracker</h1>
+        <p class="text-secondary mb-0">Fast simulated portfolio management without a database.</p>
+    </div>
+</section>
+
+@if (TempData["Message"] is string msg)
+{
+    <div class="alert alert-success shadow-sm">@msg</div>
+}
+
+<div class="row g-3 mb-4">
+    <div class="col-md-6">
+        <div class="card border-0 finance-card h-100">
+            <div class="card-body">
+                <p class="text-secondary mb-1">Total Portfolio Value</p>
+                <h3 class="mb-0">@total.ToString("C")</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card border-0 finance-card h-100">
+            <div class="card-body">
+                <p class="text-secondary mb-1">Projected (+500)</p>
+                <h3 class="mb-0">@projected.ToString("C")</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (lastMovement is not null)
+{
+    <div class="alert alert-info shadow-sm">
+        Latest movement: <strong>@lastMovement.Description</strong> on @lastMovement.Date.ToString("dd MMM")
+        (@lastMovement.Category - @lastMovement.Amount.ToString("C")).
+    </div>
+}
+
+<div class="card border-0 finance-card shadow-sm">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Ticker</th>
+                        <th>Name</th>
+                        <th>Sector</th>
+                        <th class="text-end">Units</th>
+                        <th class="text-end">Value</th>
+                        <th class="text-end">Net Worth</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach (var asset in Model)
+                {
+                    <tr>
+                        <td class="fw-bold">@asset.Ticker</td>
+                        <td>@asset.Name</td>
+                        <td>@asset.Sector</td>
+                        <td class="text-end">@asset.Units</td>
+                        <td class="text-end">@asset.Value.ToString("C")</td>
+                        <td class="text-end fw-semibold">@((asset.Units * asset.Value).ToString("C"))</td>
+                        <td class="text-end d-flex justify-content-end gap-2">
+                            <a href="/Asset/Info/@asset.Id" class="btn btn-sm btn-outline-primary">Details</a>
+                            <form asp-action="Delete" asp-route-id="@asset.Id" method="post" class="d-inline">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

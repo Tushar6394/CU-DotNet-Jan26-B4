@@ -1,0 +1,5 @@
+<svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Privacy icon">
+  <path d="M12 4l7 3v5c0 4.7-3.1 7.6-7 8.9-3.9-1.3-7-4.2-7-8.9V7l7-3z" fill="none" stroke="#d9eef6" stroke-width="1.8" stroke-linejoin="round"/>
+  <rect x="10" y="11" width="4" height="4" rx="1" fill="none" stroke="#f8b84f" stroke-width="1.6"/>
+  <path d="M10.8 11v-1a1.2 1.2 0 012.4 0v1" fill="none" stroke="#f8b84f" stroke-width="1.6" stroke-linecap="round"/>
+</svg>

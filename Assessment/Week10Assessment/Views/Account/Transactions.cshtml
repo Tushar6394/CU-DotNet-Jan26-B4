@@ -1,0 +1,119 @@
+@model List<Week10Assessment.Models.Transaction>
+@{
+    ViewData["Title"] = "All Transactions";
+    string? selectedCategory = ViewBag.SelectedCategory as string;
+    string? fromDate = ViewBag.FromDate as string;
+    string? toDate = ViewBag.ToDate as string;
+    var today = DateTime.Today;
+    var todayStr = today.ToString("yyyy-MM-dd");
+    var last7Str = today.AddDays(-6).ToString("yyyy-MM-dd");
+    var monthStartStr = new DateTime(today.Year, today.Month, 1).ToString("yyyy-MM-dd");
+    var isToday = fromDate == todayStr && toDate == todayStr;
+    var isLast7 = fromDate == last7Str && toDate == todayStr;
+    var isThisMonth = fromDate == monthStartStr && toDate == todayStr;
+}
+
+<section class="hero-panel mb-4">
+    <div>
+        <p class="eyebrow mb-2">Finance Ledger</p>
+        <h1 class="display-6 mb-2">All Transactions</h1>
+        <p class="mb-0">Every account movement is recorded here, including transfer Debit and Credit entries.</p>
+    </div>
+    <a asp-action="Transfer" class="btn btn-finance">New Transfer</a>
+</section>
+
+@if (TempData["Success"] is string success)
+{
+    <div class="alert alert-success shadow-sm">@success</div>
+}
+
+<div class="card finance-card border-0 shadow-sm mb-3">
+    <div class="card-body">
+        <form method="get" asp-action="Transactions" class="row g-3 align-items-end">
+            <div class="col-md-4">
+                <label class="form-label">Category</label>
+                <select name="category" class="form-select">
+                    <option value="" selected="@(string.IsNullOrWhiteSpace(selectedCategory))">All Categories</option>
+                    <option value="Credit" selected="@(selectedCategory == "Credit")">Credit</option>
+                    <option value="Debit" selected="@(selectedCategory == "Debit")">Debit</option>
+                    <option value="Income" selected="@(selectedCategory == "Income")">Income</option>
+                    <option value="Expense" selected="@(selectedCategory == "Expense")">Expense</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">From Date</label>
+                <input type="date" name="fromDate" class="form-control" value="@fromDate" />
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">To Date</label>
+                <input type="date" name="toDate" class="form-control" value="@toDate" />
+            </div>
+            <div class="col-md-2 d-flex gap-2">
+                <button type="submit" class="btn btn-finance w-100">Filter</button>
+                <a asp-action="Transactions" class="btn btn-outline-secondary w-100">Clear</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="d-flex flex-wrap gap-2 mb-3">
+     <span class="text-secondary small align-self-center">Quick Range:</span>
+     <a asp-action="Transactions"
+         asp-route-category="@selectedCategory"
+         asp-route-fromDate="@todayStr"
+         asp-route-toDate="@todayStr"
+         class="btn btn-sm @(isToday ? "btn-finance" : "btn-outline-secondary")">Today</a>
+     <a asp-action="Transactions"
+         asp-route-category="@selectedCategory"
+         asp-route-fromDate="@last7Str"
+         asp-route-toDate="@todayStr"
+         class="btn btn-sm @(isLast7 ? "btn-finance" : "btn-outline-secondary")">Last 7 Days</a>
+     <a asp-action="Transactions"
+         asp-route-category="@selectedCategory"
+         asp-route-fromDate="@monthStartStr"
+         asp-route-toDate="@todayStr"
+         class="btn btn-sm @(isThisMonth ? "btn-finance" : "btn-outline-secondary")">This Month</a>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-warning shadow-sm">No transactions found for selected filters.</div>
+}
+else
+{
+    <div class="card finance-card border-0 shadow-sm">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Date</th>
+                            <th>Description</th>
+                            <th>Category</th>
+                            <th class="text-end">Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var txn in Model)
+                    {
+                        var badgeClass = txn.Category == "Credit" ? "bg-success-subtle text-success border border-success-subtle" :
+                                         txn.Category == "Debit" ? "bg-danger-subtle text-danger border border-danger-subtle" :
+                                         txn.Category == "Income" ? "bg-dark-subtle text-dark border border-dark-subtle" :
+                                         "bg-secondary-subtle text-secondary border border-secondary-subtle";
+                        var amountClass = txn.Category == "Credit" ? "text-success" :
+                                          txn.Category == "Debit" ? "text-danger" :
+                                          "text-dark";
+
+                        <tr>
+                            <td>@txn.Date.ToString("dd MMM yyyy")</td>
+                            <td>@txn.Description</td>
+                            <td><span class="badge @badgeClass">@txn.Category</span></td>
+                            <td class="text-end fw-semibold @amountClass">@txn.Amount.ToString("C")</td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+}

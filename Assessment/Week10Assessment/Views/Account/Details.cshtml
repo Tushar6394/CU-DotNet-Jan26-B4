@@ -1,0 +1,27 @@
+@model Week10Assessment.Models.Account
+@{
+    ViewData["Title"] = "Account Details";
+}
+
+<div class="card finance-card shadow-sm border-0">
+    <div class="card-body p-4">
+        <h2 class="h4 mb-3">Account #@Model.Id</h2>
+        <dl class="row mb-0">
+            <dt class="col-sm-3">Account Holder</dt>
+            <dd class="col-sm-9">@Model.HolderName</dd>
+
+            <dt class="col-sm-3">Account Type</dt>
+            <dd class="col-sm-9">@Model.AccountType</dd>
+
+            <dt class="col-sm-3">Balance</dt>
+            <dd class="col-sm-9">@Model.Balance.ToString("C")</dd>
+
+            <dt class="col-sm-3">Opened</dt>
+            <dd class="col-sm-9">@Model.OpenedOn.ToString("dd MMM yyyy")</dd>
+        </dl>
+        <div class="mt-4 d-flex gap-2">
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-finance">Edit</a>
+            <a asp-action="Index" class="btn btn-outline-secondary">Back to List</a>
+        </div>
+    </div>
+</div>

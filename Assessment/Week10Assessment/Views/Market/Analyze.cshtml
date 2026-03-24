@@ -1,0 +1,15 @@
+@{
+    ViewData["Title"] = "Analyze";
+}
+
+<div class="card border-0 finance-card shadow-sm">
+    <div class="card-body p-4">
+        <span class="badge text-bg-info mb-2">Specialized Route</span>
+        <h2 class="h4 mb-3">Ticker Analysis</h2>
+
+        <p class="mb-2"><strong>Ticker:</strong> @ViewBag.Ticker</p>
+        <p class="mb-4"><strong>Days Considered:</strong> @ViewBag.Days</p>
+
+        <a asp-action="Summary" class="btn btn-finance">Back to Summary</a>
+    </div>
+</div>
