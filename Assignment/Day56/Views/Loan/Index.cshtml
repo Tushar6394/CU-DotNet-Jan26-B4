@@ -1,0 +1,66 @@
+@model IEnumerable<Day56.Models.Loan>
+@{
+    ViewData["Title"] = "Loan Dashboard";
+}
+
+<section class="loan-header rounded-4 p-4 mb-4">
+    <div class="d-md-flex justify-content-between align-items-center gap-3">
+        <div>
+            <h1 class="mb-2">Loan Portfolio</h1>
+            <p class="mb-0">A live in-memory view of every active and settled QuickLoan record.</p>
+        </div>
+        <a class="btn btn-warning btn-lg fw-semibold" asp-action="Add">Add New Loan</a>
+    </div>
+</section>
+
+<div class="table-responsive loan-table-wrap rounded-4 shadow-sm">
+    <table class="table align-middle mb-0">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Borrower Name</th>
+                <th>Lender Name</th>
+                <th>Amount</th>
+                <th>Status</th>
+                <th class="text-end">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (!Model.Any())
+            {
+                <tr>
+                    <td colspan="6" class="text-center py-4">No loans available. Click Add New Loan to get started.</td>
+                </tr>
+            }
+            else
+            {
+                @foreach (var loan in Model)
+                {
+                    <tr>
+                        <td>@loan.Id</td>
+                        <td>@loan.BorrowerName</td>
+                        <td>@loan.LenderName</td>
+                        <td>@loan.Amount.ToString("C")</td>
+                        <td>
+                            @if (loan.IsSettled)
+                            {
+                                <span class="status-chip settled">Settled</span>
+                            }
+                            else
+                            {
+                                <span class="status-chip active">Open</span>
+                            }
+                        </td>
+                        <td class="text-end">
+                            <a class="btn btn-sm btn-outline-primary me-2" asp-action="Edit" asp-route-id="@loan.Id">Edit</a>
+                            <form asp-action="Delete" asp-route-id="@loan.Id" method="post" class="d-inline">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Delete this loan record?');">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>

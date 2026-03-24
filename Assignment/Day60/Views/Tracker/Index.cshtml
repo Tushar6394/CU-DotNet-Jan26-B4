@@ -1,0 +1,35 @@
+@model IEnumerable<Day60.Models.PortfolioTrackerEntry>
+
+@{
+    ViewData["Title"] = "Tracker";
+}
+
+<h1>Portfolio Tracker</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Add Snapshot</a>
+</p>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.TrackedOn)</th>
+            <th>@Html.DisplayNameFor(model => model.PortfolioValue)</th>
+            <th>@Html.DisplayNameFor(model => model.CashReserve)</th>
+            <th>@Html.DisplayNameFor(model => model.NetWorth)</th>
+            <th>@Html.DisplayNameFor(model => model.Notes)</th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model)
+{
+        <tr>
+            <td>@item.TrackedOn.ToString("yyyy-MM-dd HH:mm")</td>
+            <td>@item.PortfolioValue.ToString("C")</td>
+            <td>@item.CashReserve.ToString("C")</td>
+            <td>@item.NetWorth.ToString("C")</td>
+            <td>@(string.IsNullOrWhiteSpace(item.Notes) ? "-" : item.Notes)</td>
+        </tr>
+}
+    </tbody>
+</table>

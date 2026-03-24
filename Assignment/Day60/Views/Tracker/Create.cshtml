@@ -1,0 +1,46 @@
+@model Day60.Models.PortfolioTrackerCreateViewModel
+
+@{
+    ViewData["Title"] = "Add Snapshot";
+}
+
+<h1>Add Portfolio Snapshot</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Create" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="mb-3">
+                <label asp-for="PortfolioValue" class="form-label"></label>
+                <input asp-for="PortfolioValue" class="form-control" />
+                <span asp-validation-for="PortfolioValue" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="CashReserve" class="form-label"></label>
+                <input asp-for="CashReserve" class="form-control" />
+                <span asp-validation-for="CashReserve" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Notes" class="form-label"></label>
+                <textarea asp-for="Notes" class="form-control" rows="3"></textarea>
+                <span asp-validation-for="Notes" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="NetWorth" class="form-label"></label>
+                <input asp-for="NetWorth" class="form-control" readonly />
+            </div>
+
+            <button type="submit" class="btn btn-primary">Save</button>
+            <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

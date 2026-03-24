@@ -1,0 +1,27 @@
+﻿@{
+    ViewData["Title"] = "QuickLoan Home";
+}
+
+<section class="hero-shell p-4 p-md-5 rounded-4">
+    <div class="row g-4">
+        <div class="col-lg-10">
+            <span class="badge text-bg-light border border-warning-subtle mb-3">In-Memory Portfolio Prototype</span>
+            <h1 class="display-5 fw-semibold mb-3">QuickLoan In-Memory Tracker</h1>
+            <p class="lead mb-4">Create, update, and track your entire lending portfolio with a fast MVC prototype designed for real-world demo sessions.</p>
+            <a class="btn btn-lg btn-warning fw-semibold px-4 me-2" asp-controller="Loan" asp-action="Index">Open Loan Dashboard</a>
+            <a class="btn btn-lg btn-outline-light" asp-controller="Loan" asp-action="Add">Add First Loan</a>
+        </div>
+    </div>
+</section>
+
+<section class="capabilities-shell mt-4">
+    <div class="capabilities-card p-4 rounded-4">
+        <h2 class="h5 mb-3">What you can do</h2>
+        <ul class="list-unstyled mb-0">
+            <li class="mb-2">Track borrower and lender details</li>
+            <li class="mb-2">Manage status with settled indicators</li>
+            <li class="mb-2">Edit and delete records instantly</li>
+            <li>Validate amounts between 1 and 500,000</li>
+        </ul>
+    </div>
+</section>

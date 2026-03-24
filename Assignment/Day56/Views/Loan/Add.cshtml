@@ -1,0 +1,48 @@
+@model Day56.Models.Loan
+@{
+    ViewData["Title"] = "Add Loan";
+}
+
+<section class="loan-form-card rounded-4 p-4 p-md-5">
+    <h1 class="h3 mb-4">Add New Loan</h1>
+
+    <form asp-action="Add" method="post">
+        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label asp-for="BorrowerName" class="form-label"></label>
+                <input asp-for="BorrowerName" class="form-control" />
+                <span asp-validation-for="BorrowerName" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6">
+                <label asp-for="LenderName" class="form-label"></label>
+                <input asp-for="LenderName" class="form-control" />
+                <span asp-validation-for="LenderName" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6">
+                <label asp-for="Amount" class="form-label"></label>
+                <input asp-for="Amount" class="form-control" />
+                <span asp-validation-for="Amount" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6 d-flex align-items-end">
+                <div class="form-check mt-3">
+                    <input asp-for="IsSettled" class="form-check-input" />
+                    <label asp-for="IsSettled" class="form-check-label"></label>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-4 d-flex gap-2">
+            <button type="submit" class="btn btn-warning fw-semibold">Save Loan</button>
+            <a class="btn btn-outline-light" asp-action="Index">Cancel</a>
+        </div>
+    </form>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

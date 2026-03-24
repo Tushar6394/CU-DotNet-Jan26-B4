@@ -1,0 +1,357 @@
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Space+Grotesk:wght@500;700&display=swap");
+
+:root {
+  --ink: #0b1320;
+  --teal: #00a7a6;
+  --amber: #ffb703;
+  --mint: #b8f2e6;
+  --peach: #ffd6a5;
+  --paper: #fffdf8;
+  --ease-swift: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+html {
+  font-size: 14px;
+  position: relative;
+  min-height: 100%;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+body {
+  margin-bottom: 60px;
+  font-family: "Manrope", sans-serif;
+  color: var(--ink);
+  background:
+    radial-gradient(
+      circle at 12% 15%,
+      rgba(255, 183, 3, 0.26),
+      transparent 38%
+    ),
+    radial-gradient(circle at 88% 6%, rgba(0, 167, 166, 0.22), transparent 35%),
+    linear-gradient(165deg, #fffdf7 0%, #fff8ec 45%, #f7fffe 100%);
+  animation: page-fade 520ms var(--ease-swift) both;
+}
+
+@media (pointer: fine) {
+  a,
+  button,
+  [role="button"],
+  .btn,
+  .nav-link,
+  input[type="submit"] {
+    cursor: pointer;
+  }
+
+  a:active,
+  button:active,
+  [role="button"]:active,
+  .btn:active,
+  .nav-link:active,
+  input[type="submit"]:active {
+    cursor:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='34' height='34' viewBox='0 0 34 34'%3E%3Ccircle cx='17' cy='17' r='16' fill='%23fff3d6' stroke='%23ffb703' stroke-width='2'/%3E%3Ctext x='17' y='22' text-anchor='middle' font-size='16'%3E%F0%9F%92%83%3C/text%3E%3C/svg%3E")
+        17 17,
+      pointer;
+  }
+}
+
+h1,
+h2,
+h3,
+.navbar-brand {
+  font-family: "Space Grotesk", sans-serif;
+}
+
+.quickloan-nav {
+  border-radius: 0 0 20px 20px;
+  background: linear-gradient(120deg, #073b4c 0%, #05668d 45%, #028090 100%);
+  transition: box-shadow 260ms var(--ease-swift);
+}
+
+.quickloan-nav .navbar-brand,
+.quickloan-nav .nav-link {
+  color: #ecfeff;
+}
+
+.quickloan-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.quickloan-logo {
+  width: 38px;
+  height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  position: relative;
+  overflow: hidden;
+  background: conic-gradient(from 200deg, #ffcf70, #ffd166, #fff2cc, #ffcf70);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.24);
+}
+
+.quickloan-logo .logo-core {
+  z-index: 1;
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: #073b4c;
+}
+
+.quickloan-logo .logo-pulse {
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 2px solid rgba(7, 59, 76, 0.18);
+}
+
+.quickloan-menu {
+  gap: 0.35rem;
+  margin-left: auto;
+}
+
+.quickloan-menu .nav-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.42rem;
+  padding: 0.45rem 0.78rem;
+  border-radius: 999px;
+  transition:
+    transform 220ms var(--ease-swift),
+    background-color 220ms var(--ease-swift),
+    color 220ms var(--ease-swift);
+}
+
+.quickloan-menu .nav-link:hover {
+  background: rgba(255, 255, 255, 0.16);
+  transform: translateY(-1px);
+}
+
+.quickloan-menu .nav-icon {
+  width: 18px;
+  height: 18px;
+  display: inline-flex;
+}
+
+.quickloan-menu .nav-icon svg {
+  width: 100%;
+  height: 100%;
+  fill: currentColor;
+}
+
+.quickloan-nav .nav-link:hover {
+  color: #ffdd94;
+}
+
+.quickloan-logo .logo-pulse {
+  animation: pulse-ring 2100ms ease-in-out infinite;
+}
+
+.hero-shell {
+  background: linear-gradient(135deg, #073b4c 0%, #0c6176 48%, #118ab2 100%);
+  color: #f8feff;
+  box-shadow: 0 16px 45px rgba(7, 59, 76, 0.24);
+  animation: rise-in 650ms var(--ease-swift) both;
+}
+
+.hero-card {
+  background: rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+}
+
+.capabilities-shell {
+  max-width: 1240px;
+}
+
+.capabilities-card {
+  max-width: 980px;
+  color: #0a2f3a;
+  background: linear-gradient(125deg, #fef3d3 0%, #e8fff9 62%, #d9f5ff 100%);
+  border: 1px solid rgba(7, 59, 76, 0.18);
+  box-shadow: 0 10px 28px rgba(7, 59, 76, 0.12);
+  animation: rise-in 760ms var(--ease-swift) both;
+}
+
+.capabilities-card li {
+  opacity: 0;
+  animation: list-fade 560ms var(--ease-swift) forwards;
+}
+
+.capabilities-card li:nth-child(1) {
+  animation-delay: 120ms;
+}
+
+.capabilities-card li:nth-child(2) {
+  animation-delay: 190ms;
+}
+
+.capabilities-card li:nth-child(3) {
+  animation-delay: 260ms;
+}
+
+.capabilities-card li:nth-child(4) {
+  animation-delay: 330ms;
+}
+
+.loan-header {
+  color: #052530;
+  background: linear-gradient(135deg, #ffcf70 0%, #ffdca4 50%, #b8f2e6 100%);
+  box-shadow: 0 12px 30px rgba(11, 19, 32, 0.15);
+  animation: rise-in 600ms var(--ease-swift) both;
+}
+
+.loan-table-wrap {
+  background-color: var(--paper);
+  overflow: hidden;
+  animation: rise-in 780ms var(--ease-swift) both;
+}
+
+.loan-table-wrap thead th {
+  background-color: #073b4c;
+  color: #f2fffe;
+  border: none;
+  font-weight: 700;
+}
+
+.loan-table-wrap tbody tr:nth-child(even) {
+  background: #f7fffc;
+}
+
+.loan-table-wrap tbody tr {
+  transition: background-color 220ms var(--ease-swift);
+}
+
+.loan-table-wrap tbody tr:hover {
+  background-color: #effff9;
+}
+
+.status-chip {
+  display: inline-block;
+  padding: 0.35rem 0.8rem;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.82rem;
+  transition: transform 220ms var(--ease-swift);
+}
+
+.status-chip:hover {
+  transform: translateY(-1px);
+}
+
+.status-chip.active {
+  background-color: #ffe6b2;
+  color: #7a4e00;
+}
+
+.status-chip.settled {
+  background-color: #cef9f0;
+  color: #0b6f62;
+}
+
+.loan-form-card {
+  max-width: 900px;
+  margin: 0 auto;
+  background: linear-gradient(145deg, #073b4c 0%, #0b6072 52%, #127790 100%);
+  color: #f3feff;
+  box-shadow: 0 18px 44px rgba(7, 59, 76, 0.27);
+  animation: rise-in 620ms var(--ease-swift) both;
+}
+
+.loan-form-card .form-control {
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  background-color: rgba(255, 255, 255, 0.95);
+  transition:
+    border-color 200ms var(--ease-swift),
+    box-shadow 200ms var(--ease-swift),
+    transform 200ms var(--ease-swift);
+}
+
+.loan-form-card .form-control:focus,
+.loan-form-card .form-check-input:focus,
+.btn:focus,
+.btn:active:focus,
+.btn-link.nav-link:focus {
+  box-shadow:
+    0 0 0 0.1rem #fff,
+    0 0 0 0.25rem rgba(255, 183, 3, 0.6);
+}
+
+.footer {
+  background: transparent;
+}
+
+.btn {
+  transition:
+    transform 220ms var(--ease-swift),
+    box-shadow 220ms var(--ease-swift),
+    background-color 220ms var(--ease-swift),
+    border-color 220ms var(--ease-swift);
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+}
+
+@keyframes page-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes list-fade {
+  from {
+    opacity: 0;
+    transform: translateX(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulse-ring {
+  0% {
+    transform: scale(0.94);
+    opacity: 0.35;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.65;
+  }
+  100% {
+    transform: scale(0.94);
+    opacity: 0.35;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+  }
+}

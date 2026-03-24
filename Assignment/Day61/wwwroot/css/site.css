@@ -1,0 +1,52 @@
+html {
+  font-size: 14px;
+}
+
+:root {
+  --brand-primary: #1f5f4a;
+  --brand-secondary: #e99f39;
+  --surface: #f7f5f1;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus,
+.btn:active:focus,
+.btn-link.nav-link:focus,
+.form-control:focus,
+.form-check-input:focus {
+  box-shadow:
+    0 0 0 0.1rem white,
+    0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  background: linear-gradient(180deg, #ffffff 0%, var(--surface) 100%);
+  margin-bottom: 60px;
+}
+
+.app-navbar {
+  background: linear-gradient(90deg, var(--brand-primary), #174838);
+}
+
+.brand-logo {
+  align-items: center;
+  background: var(--brand-secondary);
+  border-radius: 999px;
+  color: #1c1c1c;
+  display: inline-flex;
+  font-size: 0.85rem;
+  font-weight: 700;
+  height: 1.8rem;
+  justify-content: center;
+  width: 1.8rem;
+}
