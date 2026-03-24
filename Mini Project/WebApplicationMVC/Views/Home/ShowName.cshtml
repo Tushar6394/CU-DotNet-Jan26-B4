@@ -1,0 +1,21 @@
+@{
+    ViewData["Title"] = "ShowName";
+}
+@{
+    int Age2 = (int)ViewData["Age2"];
+    Age2 += 1;
+    ViewBag.age1 += 1;
+    int Salary = (int)TempData["Salary"];
+    Salary += 1000;
+    TempData["Salary"] = Salary;
+    for(int i = 1; i<=5; i++){
+        <h2>@i</h2>
+    }
+}
+<h1>ShowName - @ViewBag.myName</h1>
+<h2>City - @ViewData["City"]</h2>
+
+<h2>Age - @ViewBag.age1</h2>
+<h2>Age - @Age2</h2>
+
+<h2>Salary - @TempData["Salary"]</h2>

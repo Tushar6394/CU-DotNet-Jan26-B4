@@ -1,0 +1,14 @@
+@{
+    ViewData["Title"] = "ShowSalary";
+}
+
+<h1>Show Salary</h1>
+
+@if (ViewBag.Salary != null)
+{
+    <h2>Salary - @ViewBag.Salary</h2>
+}
+else
+{
+    <h2>Salary data is not available.</h2>
+} 
