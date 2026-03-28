@@ -1,0 +1,267 @@
+{
+  "info": {
+    "_postman_id": "logitrack-secure-fleet-management",
+    "name": "LogiTrack - Secure Fleet Management System",
+    "description": "JWT Authentication & Authorization Testing\n\nPhase 1: Token Generation (Identity Service)\n- Login to get JWT tokens\n\nPhase 2: Token Validation (Tracking Service)\n- Verify JWT signature and expiration\n\nPhase 3: Authorization (Access Control)\n- Role-based access to GPS data",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. Health Checks",
+      "item": [
+        {
+          "name": "Identity Service - Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://localhost:7079/api/auth/login",
+              "protocol": "https",
+              "host": ["localhost"],
+              "port": "7079",
+              "path": ["api", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Tracking Service - Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://localhost:7269/api/tracking/health",
+              "protocol": "https",
+              "host": ["localhost"],
+              "port": "7269",
+              "path": ["api", "tracking", "health"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Phase 1 - Token Generation",
+      "item": [
+        {
+          "name": "Login - Manager (john)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    if (jsonData.accessToken) {",
+                  "        pm.environment.set('manager_token', jsonData.accessToken);",
+                  "        pm.environment.set('token_type', jsonData.tokenType);",
+                  "        console.log('Manager token saved:', jsonData.accessToken.substring(0, 20) + '...');",
+                  "    }",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"manager_john\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "https://localhost:7079/api/auth/login",
+              "protocol": "https",
+              "host": ["localhost"],
+              "port": "7079",
+              "path": ["api", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Login - Driver (jane)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    if (jsonData.accessToken) {",
+                  "        pm.environment.set('driver_token', jsonData.accessToken);",
+                  "        console.log('Driver token saved:', jsonData.accessToken.substring(0, 20) + '...');",
+                  "    }",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"driver_jane\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "https://localhost:7079/api/auth/login",
+              "protocol": "https",
+              "host": ["localhost"],
+              "port": "7079",
+              "path": ["api", "auth", "login"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Phase 2 - Token Validation",
+      "item": [
+        {
+          "name": "Get GPS Data - WITHOUT Token (401 Expected)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://localhost:7269/api/tracking/gps",
+              "protocol": "https",
+              "host": ["localhost"],
+              "port": "7269",
+              "path": ["api", "tracking", "gps"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Phase 3 - Authorization (Role-Based Access Control)",
+      "item": [
+        {
+          "name": "Get GPS Data - WITH Manager Token (200 Expected)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{manager_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "https://localhost:7269/api/tracking/gps",
+              "protocol": "https",
+              "host": ["localhost"],
+              "port": "7269",
+              "path": ["api", "tracking", "gps"]
+            }
+          }
+        },
+        {
+          "name": "Get GPS Data - WITH Driver Token (403 Expected)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{driver_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "https://localhost:7269/api/tracking/gps",
+              "protocol": "https",
+              "host": ["localhost"],
+              "port": "7269",
+              "path": ["api", "tracking", "gps"]
+            }
+          }
+        },
+        {
+          "name": "Get GPS Data by Truck - Manager (200 Expected)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{manager_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "https://localhost:7269/api/tracking/gps/1",
+              "protocol": "https",
+              "host": ["localhost"],
+              "port": "7269",
+              "path": ["api", "tracking", "gps", "1"]
+            }
+          }
+        },
+        {
+          "name": "Update GPS Location - Driver (200 Expected)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{driver_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"truckId\": 3,\n  \"truckName\": \"Truck-003\",\n  \"latitude\": 37.7749,\n  \"longitude\": -122.4194,\n  \"speed\": 45.5\n}"
+            },
+            "url": {
+              "raw": "https://localhost:7269/api/tracking/gps",
+              "protocol": "https",
+              "host": ["localhost"],
+              "port": "7269",
+              "path": ["api", "tracking", "gps"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Test Invalid Credentials",
+      "item": [
+        {
+          "name": "Login - Invalid Credentials",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"invalid_user\",\n  \"password\": \"wrong_password\"\n}"
+            },
+            "url": {
+              "raw": "https://localhost:7079/api/auth/login",
+              "protocol": "https",
+              "host": ["localhost"],
+              "port": "7079",
+              "path": ["api", "auth", "login"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
