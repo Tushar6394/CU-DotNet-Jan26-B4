@@ -1,0 +1,40 @@
+@model IReadOnlyList<Vagabond.Mvc.Models.DestinationViewModel>
+
+@{
+    ViewData["Title"] = "Travel Destinations";
+}
+
+<div class="container">
+    <h1 class="mb-4">Vagabond Travel Destinations</h1>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">No destinations found.</div>
+    }
+    else
+    {
+        <table class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th>City</th>
+                    <th>Country</th>
+                    <th>Description</th>
+                    <th>Rating</th>
+                    <th>Last Visited</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var destination in Model)
+                {
+                    <tr>
+                        <td>@destination.CityName</td>
+                        <td>@destination.Country</td>
+                        <td>@destination.Description</td>
+                        <td>@destination.Rating</td>
+                        <td>@destination.LastVisited.ToString("yyyy-MM-dd")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>

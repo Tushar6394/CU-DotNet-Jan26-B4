@@ -1,0 +1,43 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Vagabond API",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build",
+      "program": "${workspaceFolder}/Assessment/Week13_Assessment/Vagabond.Api/bin/Debug/net8.0/Vagabond.Api.dll",
+      "cwd": "${workspaceFolder}/Assessment/Week13_Assessment/Vagabond.Api",
+      "stopAtEntry": false,
+      "env": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "serverReadyAction": {
+        "action": "openExternally",
+        "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+      }
+    },
+    {
+      "name": "Vagabond MVC",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build",
+      "program": "${workspaceFolder}/Assessment/Week13_Assessment/Vagabond.Mvc/bin/Debug/net8.0/Vagabond.Mvc.dll",
+      "cwd": "${workspaceFolder}/Assessment/Week13_Assessment/Vagabond.Mvc",
+      "stopAtEntry": false,
+      "env": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "serverReadyAction": {
+        "action": "openExternally",
+        "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+      }
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Week13 - API + MVC",
+      "configurations": ["Vagabond API", "Vagabond MVC"]
+    }
+  ]
+}
