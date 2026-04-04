@@ -1,0 +1,85 @@
+@model WebAppMVC7.Models.EmployeesIndexViewModel
+
+@{
+    ViewData["Title"] = "Employees";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="h2 mb-1">Employees</h1>
+        <p class="text-muted mb-0">Data loaded from the PostgreSQL container.</p>
+    </div>
+</div>
+
+<div class="alert alert-secondary">
+    <strong>Data storage:</strong> @Model.StorageLocation
+</div>
+
+<div class="card shadow-sm mb-4">
+    <div class="card-header">
+        Add Employee
+    </div>
+    <div class="card-body">
+        <form asp-action="Create" method="post" class="row g-3">
+            @Html.AntiForgeryToken()
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="col-md-4">
+                <label asp-for="NewEmployee.EmpName" class="form-label"></label>
+                <input asp-for="NewEmployee.EmpName" class="form-control" />
+                <span asp-validation-for="NewEmployee.EmpName" class="text-danger"></span>
+            </div>
+            <div class="col-md-4">
+                <label asp-for="NewEmployee.City" class="form-label"></label>
+                <input asp-for="NewEmployee.City" class="form-control" />
+                <span asp-validation-for="NewEmployee.City" class="text-danger"></span>
+            </div>
+            <div class="col-md-4">
+                <label asp-for="NewEmployee.Salary" class="form-label"></label>
+                <input asp-for="NewEmployee.Salary" class="form-control" />
+                <span asp-validation-for="NewEmployee.Salary" class="text-danger"></span>
+            </div>
+            <div class="col-12">
+                <button type="submit" class="btn btn-primary">Add Employee</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body p-0">
+        <table class="table table-striped mb-0">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>City</th>
+                    <th class="text-end">Salary</th>
+                    <th class="text-center">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var employee in Model.Employees)
+            {
+                <tr>
+                    <td>@employee.EmpId</td>
+                    <td>@employee.EmpName</td>
+                    <td>@employee.City</td>
+                    <td class="text-end">@employee.Salary.ToString("N2")</td>
+                    <td class="text-center">
+                        <a asp-action="Edit" asp-route-id="@employee.EmpId" class="btn btn-sm btn-outline-primary me-2">Edit</a>
+                        <form asp-action="Delete" method="post" class="d-inline">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="id" value="@employee.EmpId" />
+                            <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

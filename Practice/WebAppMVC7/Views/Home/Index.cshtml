@@ -1,0 +1,158 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">WebAppMVC7</h1>
+    <p class="lead">This app is configured to use a PostgreSQL database running in Docker.</p>
+    <p>
+        Start the database with <code>docker compose up -d</code>, then open the
+        <a asp-controller="Employees" asp-action="Index">Employees</a> page to verify the connection.
+    </p>
+</div>
+*** Add File: /Users/tusharmacbookair/Desktop/DOTNET/CU-DotNet-Jan26-B4/Practice/WebAppMVC7/Data/AppDbContext.cs
+using Microsoft.EntityFrameworkCore;
+using WebAppMVC7.Models;
+
+namespace WebAppMVC7.Data;
+
+public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
+{
+    public DbSet<Emp> Employees => Set<Emp>();
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Emp>(entity =>
+        {
+            entity.ToTable("Employees");
+            entity.HasKey(employee => employee.EmpId);
+            entity.Property(employee => employee.EmpName).HasMaxLength(100).IsRequired();
+            entity.Property(employee => employee.City).HasMaxLength(100).IsRequired();
+            entity.Property(employee => employee.Salary).HasColumnType("numeric(12,2)");
+        });
+    }
+}
+*** Add File: /Users/tusharmacbookair/Desktop/DOTNET/CU-DotNet-Jan26-B4/Practice/WebAppMVC7/Data/DbInitializer.cs
+using Microsoft.EntityFrameworkCore;
+using WebAppMVC7.Models;
+
+namespace WebAppMVC7.Data;
+
+public static class DbInitializer
+{
+    public static async Task InitializeAsync(IServiceProvider services)
+    {
+        using var scope = services.CreateScope();
+        var serviceProvider = scope.ServiceProvider;
+        var logger = serviceProvider.GetRequiredService<ILoggerFactory>().CreateLogger("DbInitializer");
+        var context = serviceProvider.GetRequiredService<AppDbContext>();
+
+        const int maxAttempts = 10;
+
+        for (var attempt = 1; attempt <= maxAttempts; attempt++)
+        {
+            try
+            {
+                await context.Database.EnsureCreatedAsync();
+
+                if (!await context.Employees.AnyAsync())
+                {
+                    context.Employees.AddRange(
+                        new Emp { EmpName = "Aarav Mehta", City = "Pune", Salary = 55000.00m },
+                        new Emp { EmpName = "Nisha Patel", City = "Ahmedabad", Salary = 62000.00m },
+                        new Emp { EmpName = "Riya Sharma", City = "Bengaluru", Salary = 71000.00m });
+
+                    await context.SaveChangesAsync();
+                }
+
+                return;
+            }
+            catch (Exception exception) when (attempt < maxAttempts)
+            {
+                logger.LogWarning(exception, "Database not ready on attempt {Attempt}. Retrying...", attempt);
+                await Task.Delay(TimeSpan.FromSeconds(2));
+            }
+        }
+
+        await context.Database.EnsureCreatedAsync();
+    }
+}
+*** Add File: /Users/tusharmacbookair/Desktop/DOTNET/CU-DotNet-Jan26-B4/Practice/WebAppMVC7/Controllers/EmployeesController.cs
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using WebAppMVC7.Data;
+
+namespace WebAppMVC7.Controllers;
+
+public class EmployeesController(AppDbContext context) : Controller
+{
+    public async Task<IActionResult> Index()
+    {
+        var employees = await context.Employees
+            .OrderBy(employee => employee.EmpId)
+            .ToListAsync();
+
+        return View(employees);
+    }
+}
+*** Add File: /Users/tusharmacbookair/Desktop/DOTNET/CU-DotNet-Jan26-B4/Practice/WebAppMVC7/Views/Employees/Index.cshtml
+@model IReadOnlyList<WebAppMVC7.Models.Emp>
+
+@{
+    ViewData["Title"] = "Employees";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="h2 mb-1">Employees</h1>
+        <p class="text-muted mb-0">Data loaded from the PostgreSQL container.</p>
+    </div>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body p-0">
+        <table class="table table-striped mb-0">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>City</th>
+                    <th class="text-end">Salary</th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var employee in Model)
+            {
+                <tr>
+                    <td>@employee.EmpId</td>
+                    <td>@employee.EmpName</td>
+                    <td>@employee.City</td>
+                    <td class="text-end">@employee.Salary.ToString("N2")</td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>
+*** Add File: /Users/tusharmacbookair/Desktop/DOTNET/CU-DotNet-Jan26-B4/Practice/WebAppMVC7/docker-compose.yml
+services:
+  postgres:
+    image: postgres:16
+    container_name: webappmvc7-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: webappmvc7db
+      POSTGRES_USER: webappmvc7
+      POSTGRES_PASSWORD: webappmvc7pass
+    ports:
+      - "5433:5432"
+    volumes:
+      - webappmvc7-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U webappmvc7 -d webappmvc7db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  webappmvc7-postgres-data:

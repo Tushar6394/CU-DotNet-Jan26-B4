@@ -1,0 +1,54 @@
+@model WebAppMVC7.Models.Emp
+
+@{
+    ViewData["Title"] = "Edit Employee";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-6">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h1 class="h2 mb-1">Edit Employee</h1>
+                <p class="text-muted mb-0">Update an existing employee record stored in PostgreSQL.</p>
+            </div>
+            <a asp-action="Index" class="btn btn-outline-secondary">Back</a>
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <form asp-action="Edit" method="post" class="row g-3">
+                    @Html.AntiForgeryToken()
+                    <input asp-for="EmpId" type="hidden" />
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <div class="col-12">
+                        <label asp-for="EmpName" class="form-label"></label>
+                        <input asp-for="EmpName" class="form-control" />
+                        <span asp-validation-for="EmpName" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="City" class="form-label"></label>
+                        <input asp-for="City" class="form-control" />
+                        <span asp-validation-for="City" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="Salary" class="form-label"></label>
+                        <input asp-for="Salary" class="form-control" />
+                        <span asp-validation-for="Salary" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-12 d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                        <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

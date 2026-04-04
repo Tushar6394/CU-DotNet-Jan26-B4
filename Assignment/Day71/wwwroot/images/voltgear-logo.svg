@@ -1,0 +1,17 @@
+<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="VoltGear logo">
+  <defs>
+    <linearGradient id="voltGradient" x1="16" y1="16" x2="112" y2="112" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#38BDF8"/>
+      <stop offset="1" stop-color="#4F46E5"/>
+    </linearGradient>
+    <linearGradient id="ringGradient" x1="32" y1="16" x2="104" y2="112" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#22D3EE"/>
+      <stop offset="1" stop-color="#14B8A6"/>
+    </linearGradient>
+  </defs>
+
+  <rect x="10" y="10" width="108" height="108" rx="24" fill="#0F172A"/>
+  <path d="M64 26C42.46 26 25 43.46 25 65C25 86.54 42.46 104 64 104C79.07 104 92.14 95.42 98.66 82.88" fill="none" stroke="url(#ringGradient)" stroke-width="10" stroke-linecap="round"/>
+  <path d="M85 45L64 79H80L55 110L63 82H47L70 45H85Z" fill="url(#voltGradient)"/>
+  <circle cx="99" cy="84" r="8" fill="#22D3EE"/>
+</svg>

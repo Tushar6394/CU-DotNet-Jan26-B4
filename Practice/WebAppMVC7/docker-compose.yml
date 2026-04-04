@@ -1,0 +1,21 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: webappmvc7-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: webappmvc7db
+      POSTGRES_USER: webappmvc7
+      POSTGRES_PASSWORD: webappmvc7pass
+    ports:
+      - "5433:5432"
+    volumes:
+      - webappmvc7-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U webappmvc7 -d webappmvc7db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  webappmvc7-postgres-data:
