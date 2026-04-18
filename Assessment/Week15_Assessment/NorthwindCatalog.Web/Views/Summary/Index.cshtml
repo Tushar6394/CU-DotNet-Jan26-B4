@@ -1,0 +1,27 @@
+@model List<NorthwindCatalog.Services.DTOs.CategorySummaryDto>
+
+<h2 class="mb-3">Category Summary</h2>
+
+<div class="table-responsive bg-white border rounded shadow-sm">
+    <table class="table table-striped table-hover mb-0 align-middle">
+        <thead class="table-light">
+            <tr>
+                <th>Category</th>
+                <th>Products</th>
+                <th>Avg Price</th>
+                <th>Most Expensive</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var s in Model)
+            {
+                <tr>
+                    <td>@s.CategoryName</td>
+                    <td>@s.ProductCount</td>
+                    <td>@s.AvgPrice.ToString("0.00")</td>
+                    <td>@s.MostExpensiveProduct</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

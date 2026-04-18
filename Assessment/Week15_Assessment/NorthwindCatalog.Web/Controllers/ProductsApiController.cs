@@ -1,0 +1,36 @@
+using Microsoft.AspNetCore.Mvc;
+using AutoMapper;
+using NorthwindCatalog.Services.Repositories;
+using NorthwindCatalog.Services.DTOs;
+
+namespace NorthwindCatalog.Web.Controllers;
+
+[ApiController]
+[Route("api/products")]
+public class ProductsApiController : ControllerBase
+{
+    private readonly IProductRepository _repo;
+    private readonly IMapper _mapper;
+
+    public ProductsApiController(IProductRepository repo, IMapper mapper)
+    {
+        _repo = repo;
+        _mapper = mapper;
+    }
+
+    [HttpGet("by-category/{categoryId}")]
+    public async Task<IActionResult> GetByCategory(int categoryId)
+    {
+        var products = await _repo.GetByCategoryIdAsync(categoryId);
+        var result = _mapper.Map<IEnumerable<ProductDto>>(products);
+
+        return Ok(result);
+    }
+
+    [HttpGet("summary")]
+    public async Task<IActionResult> GetSummary()
+    {
+        var summary = await _repo.GetCategorySummariesAsync();
+        return Ok(summary);
+    }
+}
