@@ -1,0 +1,285 @@
+﻿using System.Security.Claims;
+using InsureTrust.API.DTOs.Auth;
+using InsureTrust.API.DTOs.Calculator;
+using InsureTrust.API.DTOs.Claim;
+using InsureTrust.API.DTOs.Payment;
+using InsureTrust.API.DTOs.Policy;
+using InsureTrust.API.DTOs.Support;
+using InsureTrust.API.Services;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+
+namespace InsureTrust.API.Controllers;
+
+[ApiController]
+[Route("api/[controller]")]
+public class AuthController : ControllerBase
+{
+    private readonly IAuthService _svc;
+    public AuthController(IAuthService svc) => _svc = svc;
+
+    [HttpPost("register")]
+    public async Task<IActionResult> Register([FromForm] RegisterDto dto)
+    {
+        var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
+        var user = await _svc.RegisterAsync(dto, uploadPath);
+        return Ok(new { message = "Registration successful", user });
+    }
+
+    [HttpPost("login")]
+    public async Task<IActionResult> Login([FromBody] LoginDto dto)
+    {
+        var token = await _svc.LoginAsync(dto);
+        return Ok(new { token });
+    }
+
+    [HttpPost("admin-login")]
+    public async Task<IActionResult> AdminLogin([FromBody] LoginDto dto)
+    {
+        var token = await _svc.AdminLoginAsync(dto);
+        return Ok(new { token });
+    }
+
+    [Authorize]
+    [HttpGet("profile")]
+    public async Task<IActionResult> GetProfile()
+    {
+        var userId = GetUserId();
+        var user = await _svc.GetProfileAsync(userId);
+        return Ok(user);
+    }
+
+    [Authorize(Roles = "Admin")]
+    [HttpGet("users")]
+    public async Task<IActionResult> GetAllUsers()
+    {
+        var users = await _svc.GetAllUsersAsync();
+        return Ok(users);
+    }
+
+    private int GetUserId() => int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+}
+
+[ApiController]
+[Route("api/[controller]")]
+public class CalculatorController : ControllerBase
+{
+    private readonly ICalculatorService _svc;
+    public CalculatorController(ICalculatorService svc) => _svc = svc;
+
+    [HttpPost("estimate")]
+    public IActionResult Estimate([FromBody] CalculatorRequestDto dto)
+    {
+        var result = _svc.Estimate(dto);
+        return Ok(result);
+    }
+}
+
+[ApiController]
+[Route("api/[controller]")]
+public class PolicyController : ControllerBase
+{
+    private readonly IPolicyService _svc;
+    public PolicyController(IPolicyService svc) => _svc = svc;
+
+    [HttpGet("types")]
+    public async Task<IActionResult> GetTypes() => Ok(await _svc.GetPolicyTypesAsync());
+
+    [HttpGet("types/{id}")]
+    public async Task<IActionResult> GetType(int id) => Ok(await _svc.GetPolicyTypeByIdAsync(id));
+
+    [Authorize(Roles = "Admin")]
+    [HttpPost("types")]
+    public async Task<IActionResult> CreateType([FromBody] CreatePolicyTypeDto dto)
+    {
+        var pt = await _svc.CreatePolicyTypeAsync(dto);
+        return Ok(new { message = "Policy type created successfully", policyType = pt });
+    }
+
+    [Authorize(Roles = "Admin")]
+    [HttpPut("types/{id}")]
+    public async Task<IActionResult> UpdateType(int id, [FromBody] CreatePolicyTypeDto dto)
+    {
+        var pt = await _svc.UpdatePolicyTypeAsync(id, dto);
+        return Ok(new { message = "Policy type updated", policyType = pt });
+    }
+
+    [Authorize]
+    [HttpGet("my-policies")]
+    public async Task<IActionResult> GetMyPolicies()
+    {
+        var policies = await _svc.GetMyPoliciesAsync(GetUserId());
+        return Ok(policies);
+    }
+
+    [Authorize(Roles = "Admin")]
+    [HttpGet("all")]
+    public async Task<IActionResult> GetAll() => Ok(await _svc.GetAllPoliciesAsync());
+
+    [Authorize(Roles = "Admin")]
+    [HttpGet("pending")]
+    public async Task<IActionResult> GetPending() => Ok(await _svc.GetPendingPoliciesAsync());
+
+    [Authorize]
+    [HttpPost("purchase")]
+    public async Task<IActionResult> Purchase([FromBody] CreatePolicyDto dto)
+    {
+        var policy = await _svc.PurchaseAsync(dto, GetUserId());
+        return Ok(new { message = "Policy submitted for approval", policy });
+    }
+
+    [Authorize(Roles = "Admin")]
+    [HttpPut("approve/{policyId}")]
+    public async Task<IActionResult> Approve(int policyId, [FromBody] ApprovePolicyDto dto)
+    {
+        var policy = await _svc.ApprovePolicyAsync(policyId, dto, GetUserId());
+        return Ok(new { message = $"Policy {dto.Action}ed successfully", policy });
+    }
+
+    [Authorize]
+    [HttpPut("edit/{policyId}")]
+    public async Task<IActionResult> Edit(int policyId, [FromBody] EditPolicyDto dto)
+    {
+        var policy = await _svc.EditPolicyAsync(policyId, dto, GetUserId());
+        return Ok(new { message = "Policy updated", policy });
+    }
+
+    [Authorize]
+    [HttpPost("renew/{policyId}")]
+    public async Task<IActionResult> Renew(int policyId)
+    {
+        var policy = await _svc.RenewPolicyAsync(policyId, GetUserId());
+        return Ok(new { message = "Policy renewed", policy });
+    }
+
+    [Authorize]
+    [HttpDelete("{policyId}")]
+    public async Task<IActionResult> Delete(int policyId)
+    {
+        var role = User.FindFirst(ClaimTypes.Role)!.Value;
+        await _svc.DeletePolicyAsync(policyId, GetUserId(), role);
+        return Ok(new { message = "Policy deleted" });
+    }
+
+    private int GetUserId() => int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+}
+
+[ApiController]
+[Route("api/[controller]")]
+[Authorize]
+public class ClaimController : ControllerBase
+{
+    private readonly IClaimService _svc;
+    public ClaimController(IClaimService svc) => _svc = svc;
+
+    [HttpGet("my-claims")]
+    public async Task<IActionResult> GetMyClaims() => Ok(await _svc.GetMyClaimsAsync(GetUserId()));
+
+    [Authorize(Roles = "Admin")]
+    [HttpGet("all")]
+    public async Task<IActionResult> GetAll() => Ok(await _svc.GetAllClaimsAsync());
+
+    [HttpPost("submit/{policyId}")]
+    public async Task<IActionResult> Submit(int policyId, [FromForm] SubmitClaimDto dto)
+    {
+        var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
+        var claim = await _svc.SubmitClaimAsync(policyId, dto, GetUserId(), uploadPath);
+        return Ok(new { message = "Claim submitted", claim });
+    }
+
+    [Authorize(Roles = "Admin")]
+    [HttpPut("update/{claimId}")]
+    public async Task<IActionResult> Update(int claimId, [FromBody] UpdateClaimDto dto)
+    {
+        var claim = await _svc.UpdateClaimAsync(claimId, dto);
+        return Ok(new { message = "Claim updated", claim });
+    }
+
+    private int GetUserId() => int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+}
+
+[ApiController]
+[Route("api/[controller]")]
+[Authorize]
+public class SupportController : ControllerBase
+{
+    private readonly ISupportService _svc;
+    public SupportController(ISupportService svc) => _svc = svc;
+
+    [HttpGet("my-queries")]
+    public async Task<IActionResult> GetMyQueries() => Ok(await _svc.GetMyQueriesAsync(GetUserId()));
+
+    [Authorize(Roles = "Admin")]
+    [HttpGet("all")]
+    public async Task<IActionResult> GetAll() => Ok(await _svc.GetAllQueriesAsync());
+
+    [HttpPost("submit")]
+    public async Task<IActionResult> Submit([FromForm] CreateSupportQueryDto dto)
+    {
+        var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
+        var query = await _svc.SubmitQueryAsync(dto, GetUserId(), uploadPath);
+        return Ok(new { message = "Query submitted", query });
+    }
+
+    [Authorize(Roles = "Admin")]
+    [HttpPut("update/{ticketId}")]
+    public async Task<IActionResult> UpdateStatus(int ticketId, [FromBody] InsureTrust.API.DTOs.Support.UpdateSupportStatusDto dto)
+    {
+        var result = await _svc.UpdateStatusAsync(ticketId, dto);
+        return Ok(result);
+    }
+
+    private int GetUserId() => int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+}
+
+[ApiController]
+[Route("api/[controller]")]
+[Authorize]
+public class NotificationController : ControllerBase
+{
+    private readonly INotificationService _svc;
+    public NotificationController(INotificationService svc) => _svc = svc;
+
+    [HttpGet]
+    public async Task<IActionResult> GetAll() => Ok(await _svc.GetUserNotificationsAsync(GetUserId()));
+
+    [HttpGet("unread-count")]
+    public async Task<IActionResult> UnreadCount() => Ok(new { count = await _svc.GetUnreadCountAsync(GetUserId()) });
+
+    [HttpPut("mark-read/{id}")]
+    public async Task<IActionResult> MarkRead(int id)
+    {
+        await _svc.MarkReadAsync(id, GetUserId());
+        return Ok(new { message = "Marked as read" });
+    }
+
+    [HttpPut("mark-all-read")]
+    public async Task<IActionResult> MarkAllRead()
+    {
+        await _svc.MarkAllReadAsync(GetUserId());
+        return Ok(new { message = "All marked as read" });
+    }
+
+    private int GetUserId() => int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+}
+
+[ApiController]
+[Route("api/[controller]")]
+[Authorize]
+public class PaymentController : ControllerBase
+{
+    private readonly IPaymentService _svc;
+    public PaymentController(IPaymentService svc) => _svc = svc;
+
+    [HttpPost("initiate")]
+    public async Task<IActionResult> Initiate([FromBody] InitiatePaymentDto dto)
+    {
+        var payment = await _svc.InitiateAsync(dto, GetUserId());
+        return Ok(payment);
+    }
+
+    [HttpGet("history")]
+    public async Task<IActionResult> History() => Ok(await _svc.GetHistoryAsync(GetUserId()));
+
+    private int GetUserId() => int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+}

@@ -1,0 +1,67 @@
+﻿using InsureTrust.Web.Services;
+
+var builder = WebApplication.CreateBuilder(args);
+
+// Ensure web app picks free ports when default ports are occupied (helps running API + Web locally)
+int GetAvailablePort(int start)
+{
+    for (int port = start; port < start + 1000; port++)
+    {
+        try
+        {
+            var listener = new System.Net.Sockets.TcpListener(System.Net.IPAddress.Loopback, port);
+            listener.Start();
+            listener.Stop();
+            return port;
+        }
+        catch { }
+    }
+    return start; // fallback
+}
+
+// If ASPNETCORE_URLS not set, choose defaults and ensure they are available
+if (string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("ASPNETCORE_URLS")))
+{
+    var httpPort = GetAvailablePort(5000);
+    var httpsPort = GetAvailablePort(5001);
+    builder.WebHost.UseUrls($"http://localhost:{httpPort};https://localhost:{httpsPort}");
+}
+
+builder.Services.AddControllersWithViews();
+
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromHours(8);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
+builder.Services.AddHttpContextAccessor();
+
+builder.Services.AddHttpClient("API", client =>
+{
+    client.BaseAddress = new Uri(builder.Configuration["ApiBaseUrl"]!);
+    client.Timeout = TimeSpan.FromSeconds(30);
+});
+
+builder.Services.AddScoped<ApiClient>();
+
+var app = builder.Build();
+
+if (!app.Environment.IsDevelopment())
+{
+    app.UseExceptionHandler("/Home/Error");
+    app.UseHsts();
+}
+
+app.UseHttpsRedirection();
+app.UseStaticFiles();
+app.UseRouting();
+app.UseSession();
+app.UseAuthorization();
+
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.Run();

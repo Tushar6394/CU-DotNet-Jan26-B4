@@ -1,0 +1,650 @@
+﻿using System.Text.Json;
+using InsureTrust.API.DTOs.Auth;
+using InsureTrust.API.DTOs.Calculator;
+using InsureTrust.API.DTOs.Claim;
+using InsureTrust.API.DTOs.Notification;
+using InsureTrust.API.DTOs.Payment;
+using InsureTrust.API.DTOs.Policy;
+using InsureTrust.API.DTOs.Support;
+using InsureTrust.API.Exceptions;
+using InsureTrust.API.Helpers;
+using InsureTrust.API.Models;
+using InsureTrust.API.Repositories;
+
+namespace InsureTrust.API.Services;
+
+// ---- Interfaces ----
+
+public interface IAuthService
+{
+    Task<UserDto> RegisterAsync(RegisterDto dto, string uploadPath);
+    Task<string> LoginAsync(LoginDto dto);
+    Task<string> AdminLoginAsync(LoginDto dto);
+    Task<UserDto> GetProfileAsync(int userId);
+    Task<IEnumerable<UserDto>> GetAllUsersAsync();
+}
+
+public interface IPolicyService
+{
+    Task<IEnumerable<PolicyTypeDto>> GetPolicyTypesAsync();
+    Task<PolicyTypeDto> GetPolicyTypeByIdAsync(int id);
+    Task<PolicyTypeDto> CreatePolicyTypeAsync(CreatePolicyTypeDto dto);
+    Task<PolicyTypeDto> UpdatePolicyTypeAsync(int id, CreatePolicyTypeDto dto);
+    Task<IEnumerable<PolicyDto>> GetMyPoliciesAsync(int userId);
+    Task<IEnumerable<PolicyDto>> GetAllPoliciesAsync();
+    Task<IEnumerable<PolicyDto>> GetPendingPoliciesAsync();
+    Task<PolicyDto> PurchaseAsync(CreatePolicyDto dto, int userId);
+    Task<PolicyDto> ApprovePolicyAsync(int policyId, ApprovePolicyDto dto, int adminId);
+    Task<PolicyDto> EditPolicyAsync(int policyId, EditPolicyDto dto, int userId);
+    Task DeletePolicyAsync(int policyId, int userId, string role);
+    Task<PolicyDto> RenewPolicyAsync(int policyId, int userId);
+}
+
+public interface IClaimService
+{
+    Task<IEnumerable<ClaimDto>> GetMyClaimsAsync(int userId);
+    Task<IEnumerable<ClaimDto>> GetAllClaimsAsync();
+    Task<ClaimDto> SubmitClaimAsync(int policyId, SubmitClaimDto dto, int userId, string uploadPath);
+    Task<ClaimDto> UpdateClaimAsync(int claimId, UpdateClaimDto dto);
+}
+
+public interface ISupportService
+{
+    Task<IEnumerable<SupportQueryDto>> GetMyQueriesAsync(int userId);
+    Task<IEnumerable<SupportQueryDto>> GetAllQueriesAsync();
+    Task<SupportQueryDto> SubmitQueryAsync(CreateSupportQueryDto dto, int userId, string uploadPath);
+    Task<SupportQueryDto> UpdateStatusAsync(int ticketId, UpdateSupportStatusDto dto);
+}
+
+public interface INotificationService
+{
+    Task<IEnumerable<NotificationDto>> GetUserNotificationsAsync(int userId);
+    Task<int> GetUnreadCountAsync(int userId);
+    Task MarkReadAsync(int notifId, int userId);
+    Task MarkAllReadAsync(int userId);
+    Task SendAsync(int userId, string title, string message, string color, string feature);
+}
+
+public interface ICalculatorService
+{
+    CalculatorResultDto Estimate(CalculatorRequestDto dto);
+}
+
+public interface IPaymentService
+{
+    Task<PaymentDto> InitiateAsync(InitiatePaymentDto dto, int userId);
+    Task<IEnumerable<PaymentDto>> GetHistoryAsync(int userId);
+}
+
+// ---- Implementations ----
+
+public class AuthService : IAuthService
+{
+    private readonly IUserRepository _repo;
+    private readonly JwtHelper _jwt;
+    private readonly INotificationService _notif;
+
+    public AuthService(IUserRepository repo, JwtHelper jwt, INotificationService notif)
+    {
+        _repo = repo; _jwt = jwt; _notif = notif;
+    }
+
+    public async Task<UserDto> RegisterAsync(RegisterDto dto, string uploadPath)
+    {
+        if (await _repo.ExistsAsync(u => u.Email == dto.Email))
+            throw new BadRequestException("Email already registered.");
+        if (dto.Password != dto.ConfirmPassword)
+            throw new BadRequestException("Passwords do not match.");
+        if (dto.Password.Length < 6)
+            throw new BadRequestException("Password must be at least 6 characters.");
+        if (!IsValidPan(dto.PanCard))
+            throw new BadRequestException("Invalid PAN card format. Expected format: ABCDE1234F");
+
+        var user = new User
+        {
+            Name = dto.Name,
+            Email = dto.Email,
+            PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password),
+            PhoneNo = dto.PhoneNo,
+            PanCard = dto.PanCard.ToUpper(),
+            Role = "Customer",
+            KycStatus = "Pending",
+            Balance = 0,
+            CreatedAt = DateTime.UtcNow
+        };
+
+        if (dto.KycDocument != null)
+        {
+            var fileName = $"{Guid.NewGuid()}{Path.GetExtension(dto.KycDocument.FileName)}";
+            var filePath = Path.Combine(uploadPath, "kyc", fileName);
+            Directory.CreateDirectory(Path.GetDirectoryName(filePath)!);
+            using var stream = new FileStream(filePath, FileMode.Create);
+            await dto.KycDocument.CopyToAsync(stream);
+            user.KycDocumentPath = $"/uploads/kyc/{fileName}";
+            user.KycStatus = "Verified";
+        }
+
+        var created = await _repo.AddAsync(user);
+        created.UserNumber = NumberGenerators.GenerateUserNumber(created.Id);
+        await _repo.UpdateAsync(created);
+
+        return MapUserDto(created);
+    }
+
+    public async Task<string> LoginAsync(LoginDto dto)
+    {
+        var user = await _repo.GetByEmailAsync(dto.Email)
+            ?? throw new NotFoundException("User not found.");
+        if (user.Role == "Admin")
+            throw new UnauthorizedException("Please use the admin login endpoint.");
+        if (!BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash))
+            throw new UnauthorizedException("Invalid password.");
+        return _jwt.GenerateToken(user);
+    }
+
+    public async Task<string> AdminLoginAsync(LoginDto dto)
+    {
+        var user = await _repo.GetByEmailAsync(dto.Email)
+            ?? throw new NotFoundException("Admin not found.");
+        if (user.Role != "Admin")
+            throw new ForbiddenException("Access denied. Admin only.");
+        if (!BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash))
+            throw new UnauthorizedException("Invalid password.");
+        return _jwt.GenerateToken(user);
+    }
+
+    public async Task<UserDto> GetProfileAsync(int userId)
+    {
+        var user = await _repo.GetByIdAsync(userId) ?? throw new NotFoundException("User not found.");
+        return MapUserDto(user);
+    }
+
+    public async Task<IEnumerable<UserDto>> GetAllUsersAsync()
+    {
+        var users = await _repo.GetAllAsync();
+        return users.Select(MapUserDto);
+    }
+
+    private static UserDto MapUserDto(User u) => new()
+    {
+        Id = u.Id, UserNumber = u.UserNumber, Name = u.Name, Email = u.Email,
+        PhoneNo = u.PhoneNo, Role = u.Role, KycStatus = u.KycStatus,
+        Balance = u.Balance, CreatedAt = u.CreatedAt
+    };
+
+    private static bool IsValidPan(string pan)
+    {
+        if (string.IsNullOrWhiteSpace(pan) || pan.Length != 10) return false;
+        var upper = pan.ToUpper();
+        return upper[..5].All(char.IsLetter) &&
+               upper[5..9].All(char.IsDigit) &&
+               char.IsLetter(upper[9]);
+    }
+}
+
+public class PolicyService : IPolicyService
+{
+    private readonly IPolicyRepository _repo;
+    private readonly INotificationService _notif;
+    private readonly IUserRepository _userRepo;
+
+    public PolicyService(IPolicyRepository repo, INotificationService notif, IUserRepository userRepo)
+    {
+        _repo = repo; _notif = notif; _userRepo = userRepo;
+    }
+
+    public async Task<IEnumerable<PolicyTypeDto>> GetPolicyTypesAsync()
+    {
+        var types = await _repo.GetAllPolicyTypesAsync();
+        return types.Select(MapPolicyTypeDto);
+    }
+
+    public async Task<PolicyTypeDto> GetPolicyTypeByIdAsync(int id)
+    {
+        var pt = await _repo.GetPolicyTypeByIdAsync(id) ?? throw new NotFoundException("Policy type not found.");
+        return MapPolicyTypeDto(pt);
+    }
+
+    public async Task<PolicyTypeDto> CreatePolicyTypeAsync(CreatePolicyTypeDto dto)
+    {
+        var pt = new PolicyType
+        {
+            Name = dto.Name, Category = dto.Category, Description = dto.Description,
+            Icon = dto.Icon, BaseMonthlyPremium = dto.BaseMonthlyPremium,
+            MinTenureMonths = dto.MinTenureMonths, MaxTenureMonths = dto.MaxTenureMonths,
+            CoverageDetails = dto.CoverageDetails, IsActive = true, CreatedAt = DateTime.UtcNow
+        };
+        var created = await _repo.AddPolicyTypeAsync(pt);
+        return MapPolicyTypeDto(created);
+    }
+
+    public async Task<PolicyTypeDto> UpdatePolicyTypeAsync(int id, CreatePolicyTypeDto dto)
+    {
+        var pt = await _repo.GetPolicyTypeByIdAsync(id) ?? throw new NotFoundException("Policy type not found.");
+        pt.Name = dto.Name; pt.Category = dto.Category; pt.Description = dto.Description;
+        pt.Icon = dto.Icon; pt.BaseMonthlyPremium = dto.BaseMonthlyPremium;
+        pt.MinTenureMonths = dto.MinTenureMonths; pt.MaxTenureMonths = dto.MaxTenureMonths;
+        pt.CoverageDetails = dto.CoverageDetails;
+        await _repo.UpdatePolicyTypeAsync(pt);
+        return MapPolicyTypeDto(pt);
+    }
+
+    public async Task<IEnumerable<PolicyDto>> GetMyPoliciesAsync(int userId)
+    {
+        var policies = await _repo.GetUserPoliciesAsync(userId);
+        return policies.Select(MapPolicyDto);
+    }
+
+    public async Task<IEnumerable<PolicyDto>> GetAllPoliciesAsync()
+    {
+        var policies = await _repo.GetAllPoliciesAsync();
+        return policies.Select(MapPolicyDto);
+    }
+
+    public async Task<IEnumerable<PolicyDto>> GetPendingPoliciesAsync()
+    {
+        var policies = await _repo.GetPendingPoliciesAsync();
+        return policies.Select(MapPolicyDto);
+    }
+
+    public async Task<PolicyDto> PurchaseAsync(CreatePolicyDto dto, int userId)
+    {
+        var policyType = await _repo.GetPolicyTypeByIdAsync(dto.PolicyTypeId)
+            ?? throw new NotFoundException("Policy type not found.");
+        if (!new[] { 5000m, 10000m, 15000m }.Contains(dto.PackageAmount))
+            throw new BadRequestException("Package amount must be ₹5,000, ₹10,000, or ₹15,000.");
+
+        var policy = new UserPolicy
+        {
+            UserId = userId, PolicyTypeId = dto.PolicyTypeId,
+            Status = "Pending", PurchaseDate = DateTime.UtcNow,
+            ExpiryDate = DateTime.UtcNow.AddMonths(dto.Tenure),
+            Tenure = dto.Tenure, PackageAmount = dto.PackageAmount,
+            DynamicFieldsJson = JsonSerializer.Serialize(dto.DynamicFields)
+        };
+
+        var created = await _repo.AddUserPolicyAsync(policy);
+        created.PolicyNumber = NumberGenerators.GeneratePolicyNumber(created.Id);
+        await _repo.UpdateUserPolicyAsync(created);
+
+        await _notif.SendAsync(userId, "Policy Purchase Pending",
+            $"Your {policyType.Name} policy {created.PolicyNumber} is pending admin approval.",
+            "Yellow", "Policy");
+
+        return MapPolicyDto(created);
+    }
+
+    public async Task<PolicyDto> ApprovePolicyAsync(int policyId, ApprovePolicyDto dto, int adminId)
+    {
+        var policy = await _repo.GetUserPolicyByIdAsync(policyId) ?? throw new NotFoundException("Policy not found.");
+
+        if (dto.Action == "Grant")
+        {
+            policy.Status = "Active";
+            await _notif.SendAsync(policy.UserId, "Policy Approved",
+                $"Your {policy.PolicyType.Name} policy {policy.PolicyNumber} has been approved and is now active!",
+                "Green", "Policy");
+        }
+        else if (dto.Action == "Reject")
+        {
+            policy.Status = "Rejected";
+            policy.AdminRemarks = dto.AdminRemarks;
+            await _notif.SendAsync(policy.UserId, "Policy Rejected",
+                $"Your {policy.PolicyType.Name} policy {policy.PolicyNumber} was rejected. {dto.AdminRemarks}",
+                "Red", "Policy");
+        }
+        else throw new BadRequestException("Invalid action. Use Grant or Reject.");
+
+        await _repo.UpdateUserPolicyAsync(policy);
+        return MapPolicyDto(policy);
+    }
+
+    public async Task<PolicyDto> EditPolicyAsync(int policyId, EditPolicyDto dto, int userId)
+    {
+        var policy = await _repo.GetUserPolicyByIdAsync(policyId) ?? throw new NotFoundException("Policy not found.");
+        if (policy.UserId != userId) throw new ForbiddenException("Access denied.");
+        if (policy.Status != "Active") throw new BadRequestException("Only active policies can be edited.");
+
+        policy.Tenure = dto.Tenure > 0 ? dto.Tenure : policy.Tenure;
+        policy.PackageAmount = dto.PackageAmount > 0 ? dto.PackageAmount : policy.PackageAmount;
+        policy.ExpiryDate = policy.PurchaseDate.AddMonths(policy.Tenure);
+        await _repo.UpdateUserPolicyAsync(policy);
+
+        await _notif.SendAsync(userId, "Policy Updated",
+            $"Your policy {policy.PolicyNumber} has been updated.", "Yellow", "Policy");
+
+        return MapPolicyDto(policy);
+    }
+
+    public async Task DeletePolicyAsync(int policyId, int userId, string role)
+    {
+        var policy = await _repo.GetUserPolicyByIdAsync(policyId) ?? throw new NotFoundException("Policy not found.");
+        if (role != "Admin" && policy.UserId != userId) throw new ForbiddenException("Access denied.");
+        await _repo.DeleteUserPolicyAsync(policy);
+    }
+
+    public async Task<PolicyDto> RenewPolicyAsync(int policyId, int userId)
+    {
+        var policy = await _repo.GetUserPolicyByIdAsync(policyId) ?? throw new NotFoundException("Policy not found.");
+        if (policy.UserId != userId) throw new ForbiddenException("Access denied.");
+        if (policy.Status != "Active") throw new BadRequestException("Only active policies can be renewed.");
+
+        policy.ExpiryDate = policy.ExpiryDate.AddMonths(policy.Tenure);
+        await _repo.UpdateUserPolicyAsync(policy);
+
+        await _notif.SendAsync(userId, "Policy Renewed",
+            $"Your {policy.PolicyType.Name} policy {policy.PolicyNumber} has been renewed successfully.",
+            "Yellow", "Policy");
+
+        return MapPolicyDto(policy);
+    }
+
+    private static PolicyTypeDto MapPolicyTypeDto(PolicyType pt) => new()
+    {
+        Id = pt.Id, Name = pt.Name, Category = pt.Category, Description = pt.Description,
+        Icon = pt.Icon, BaseMonthlyPremium = pt.BaseMonthlyPremium,
+        MinTenureMonths = pt.MinTenureMonths, MaxTenureMonths = pt.MaxTenureMonths,
+        CoverageDetails = pt.CoverageDetails, IsActive = pt.IsActive, CreatedAt = pt.CreatedAt
+    };
+
+    private static PolicyDto MapPolicyDto(UserPolicy p) => new()
+    {
+        Id = p.Id, PolicyNumber = p.PolicyNumber,
+        PolicyTypeName = p.PolicyType?.Name ?? "",
+        Category = p.PolicyType?.Category ?? "",
+        Icon = p.PolicyType?.Icon ?? "",
+        Status = p.Status, PurchaseDate = p.PurchaseDate, ExpiryDate = p.ExpiryDate,
+        Tenure = p.Tenure, PackageAmount = p.PackageAmount,
+        DaysLeft = Math.Max(0, (p.ExpiryDate - DateTime.UtcNow).Days),
+        AdminRemarks = p.AdminRemarks,
+        UserName = p.User?.Name ?? "",
+        UserEmail = p.User?.Email ?? ""
+    };
+}
+
+public class ClaimService : IClaimService
+{
+    private readonly IClaimRepository _repo;
+    private readonly IPolicyRepository _policyRepo;
+    private readonly INotificationService _notif;
+    private readonly IUserRepository _userRepo;
+
+    public ClaimService(IClaimRepository repo, IPolicyRepository policyRepo,
+        INotificationService notif, IUserRepository userRepo)
+    {
+        _repo = repo; _policyRepo = policyRepo; _notif = notif; _userRepo = userRepo;
+    }
+
+    public async Task<IEnumerable<ClaimDto>> GetMyClaimsAsync(int userId)
+    {
+        var claims = await _repo.GetByUserIdAsync(userId);
+        return claims.Select(MapClaimDto);
+    }
+
+    public async Task<IEnumerable<ClaimDto>> GetAllClaimsAsync()
+    {
+        var claims = await _repo.GetAllAsync();
+        return claims.Select(MapClaimDto);
+    }
+
+    public async Task<ClaimDto> SubmitClaimAsync(int policyId, SubmitClaimDto dto, int userId, string uploadPath)
+    {
+        var policy = await _policyRepo.GetUserPolicyByIdAsync(policyId)
+            ?? throw new NotFoundException("Policy not found.");
+        if (policy.UserId != userId) throw new ForbiddenException("Access denied.");
+        if (policy.Status != "Active") throw new BadRequestException("Only active policies can submit claims.");
+
+        var docPaths = new List<string>();
+        var claimDocsPath = Path.Combine(uploadPath, "claim-documents");
+        Directory.CreateDirectory(claimDocsPath);
+
+        foreach (var file in dto.Documents)
+        {
+            var fn = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
+            var fp = Path.Combine(claimDocsPath, fn);
+            using var stream = new FileStream(fp, FileMode.Create);
+            await file.CopyToAsync(stream);
+            docPaths.Add($"/uploads/claim-documents/{fn}");
+        }
+
+        var claim = new Claim
+        {
+            UserPolicyId = policyId, ClaimStatus = "Pending",
+            ClaimDate = DateTime.UtcNow, MaturityAmount = 0,
+            DocumentsSubmitted = JsonSerializer.Serialize(docPaths)
+        };
+
+        var created = await _repo.AddAsync(claim);
+        created.ClaimNumber = NumberGenerators.GenerateClaimNumber(created.Id);
+        await _repo.UpdateAsync(created);
+
+        await _notif.SendAsync(userId, "Claim Submitted",
+            $"Your claim {created.ClaimNumber} has been submitted and is under review.",
+            "Yellow", "Claim");
+
+        return MapClaimDto(created);
+    }
+
+    public async Task<ClaimDto> UpdateClaimAsync(int claimId, UpdateClaimDto dto)
+    {
+        var claim = await _repo.GetByIdAsync(claimId) ?? throw new NotFoundException("Claim not found.");
+        var userId = claim.UserPolicy.UserId;
+
+        if (dto.Action == "Approve")
+        {
+            claim.ClaimStatus = "Approved";
+            claim.MaturityAmount = dto.MaturityAmount;
+            claim.AdminRemarks = dto.AdminRemarks;
+            var user = await _userRepo.GetByIdAsync(userId);
+            if (user != null) { user.Balance += dto.MaturityAmount; await _userRepo.UpdateAsync(user); }
+            await _notif.SendAsync(userId, "Claim Approved",
+                $"Your claim {claim.ClaimNumber} has been approved. ₹{dto.MaturityAmount:N0} credited to your account.",
+                "Green", "Claim");
+        }
+        else if (dto.Action == "Deny")
+        {
+            claim.ClaimStatus = "Denied";
+            claim.AdminRemarks = dto.AdminRemarks;
+            await _notif.SendAsync(userId, "Claim Denied",
+                $"Your claim {claim.ClaimNumber} has been denied. {dto.AdminRemarks}",
+                "Red", "Claim");
+        }
+
+        await _repo.UpdateAsync(claim);
+        return MapClaimDto(claim);
+    }
+
+    private static ClaimDto MapClaimDto(Claim c) => new()
+    {
+        Id = c.Id, ClaimNumber = c.ClaimNumber,
+        PolicyNumber = c.UserPolicy?.PolicyNumber ?? "",
+        PolicyTypeName = c.UserPolicy?.PolicyType?.Name ?? "",
+        ClaimStatus = c.ClaimStatus, ClaimDate = c.ClaimDate,
+        MaturityAmount = c.MaturityAmount,
+        DocumentsCount = JsonSerializer.Deserialize<List<string>>(c.DocumentsSubmitted)?.Count ?? 0,
+        AdminRemarks = c.AdminRemarks,
+        UserName = c.UserPolicy?.User?.Name ?? ""
+    };
+}
+
+public class SupportService : ISupportService
+{
+    private readonly ISupportRepository _repo;
+    private readonly INotificationService _notif;
+
+    public SupportService(ISupportRepository repo, INotificationService notif)
+    {
+        _repo = repo; _notif = notif;
+    }
+
+    public async Task<IEnumerable<SupportQueryDto>> GetMyQueriesAsync(int userId)
+    {
+        var queries = await _repo.GetByUserIdAsync(userId);
+        return queries.Select(MapDto);
+    }
+
+    public async Task<IEnumerable<SupportQueryDto>> GetAllQueriesAsync()
+    {
+        var queries = await _repo.GetAllAsync();
+        return queries.Select(MapDto);
+    }
+
+    public async Task<SupportQueryDto> SubmitQueryAsync(CreateSupportQueryDto dto, int userId, string uploadPath)
+    {
+        var query = new SupportQuery
+        {
+            UserId = userId, Subject = dto.Subject, Description = dto.Description,
+            Status = "Pending", CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow
+        };
+
+        if (dto.Attachment != null)
+        {
+            var dir = Path.Combine(uploadPath, "support-attachments");
+            Directory.CreateDirectory(dir);
+            var fn = $"{Guid.NewGuid()}{Path.GetExtension(dto.Attachment.FileName)}";
+            using var stream = new FileStream(Path.Combine(dir, fn), FileMode.Create);
+            await dto.Attachment.CopyToAsync(stream);
+            query.AttachmentPath = $"/uploads/support-attachments/{fn}";
+        }
+
+        var created = await _repo.AddAsync(query);
+        created.TicketNumber = NumberGenerators.GenerateTicketNumber(created.Id);
+        await _repo.UpdateAsync(created);
+
+        return MapDto(created);
+    }
+
+    public async Task<SupportQueryDto> UpdateStatusAsync(int ticketId, UpdateSupportStatusDto dto)
+    {
+        var query = await _repo.GetByIdAsync(ticketId) ?? throw new NotFoundException("Ticket not found.");
+        query.Status = dto.Status;
+        query.UpdatedAt = DateTime.UtcNow;
+        await _repo.UpdateAsync(query);
+
+        await _notif.SendAsync(query.UserId, "Support Ticket Updated",
+            $"Your ticket {query.TicketNumber} status changed to {dto.Status}.",
+            "Blue", "Support");
+
+        return MapDto(query);
+    }
+
+    private static SupportQueryDto MapDto(SupportQuery s) => new()
+    {
+        Id = s.Id, TicketNumber = s.TicketNumber, Subject = s.Subject,
+        Description = s.Description, Status = s.Status,
+        CreatedAt = s.CreatedAt, UpdatedAt = s.UpdatedAt,
+        UserName = s.User?.Name ?? "", UserEmail = s.User?.Email ?? ""
+    };
+}
+
+public class NotificationService : INotificationService
+{
+    private readonly INotificationRepository _repo;
+    public NotificationService(INotificationRepository repo) => _repo = repo;
+
+    public async Task<IEnumerable<NotificationDto>> GetUserNotificationsAsync(int userId)
+    {
+        var notifs = await _repo.GetByUserIdAsync(userId);
+        return notifs.Select(MapDto);
+    }
+
+    public async Task<int> GetUnreadCountAsync(int userId) => await _repo.GetUnreadCountAsync(userId);
+
+    public async Task MarkReadAsync(int notifId, int userId)
+    {
+        var notifs = await _repo.GetByUserIdAsync(userId);
+        var notif = notifs.FirstOrDefault(n => n.Id == notifId) ?? throw new NotFoundException("Notification not found.");
+        notif.IsRead = true;
+        await _repo.UpdateAsync(notif);
+    }
+
+    public async Task MarkAllReadAsync(int userId) => await _repo.MarkAllReadAsync(userId);
+
+    public async Task SendAsync(int userId, string title, string message, string color, string feature)
+    {
+        await _repo.AddAsync(new Notification
+        {
+            UserId = userId, Title = title, Message = message,
+            ColorCode = color, IsRead = false, CreatedAt = DateTime.UtcNow,
+            RelatedFeature = feature
+        });
+    }
+
+    private static NotificationDto MapDto(Notification n) => new()
+    {
+        Id = n.Id, Title = n.Title, Message = n.Message,
+        ColorCode = n.ColorCode, IsRead = n.IsRead,
+        CreatedAt = n.CreatedAt, RelatedFeature = n.RelatedFeature
+    };
+}
+
+public class CalculatorService : ICalculatorService
+{
+    public CalculatorResultDto Estimate(CalculatorRequestDto dto)
+    {
+        var rates = new Dictionary<string, decimal>
+        {
+            ["Term Life"] = 0.010m, ["Health"] = 0.008m,
+            ["Vehicle"] = 0.015m, ["Home"] = 0.005m,
+            ["Property"] = 0.012m, ["Employee Group Benefits"] = 0.018m,
+            ["Engineering"] = 0.014m
+        };
+
+        var rate = rates.GetValueOrDefault(dto.InsuranceType, 0.01m);
+        var ageFactor = 1m + (dto.Age - 30) * 0.02m;
+        var monthly = Math.Round(dto.CoverageAmount * rate * ageFactor / 12, 0);
+        var total = monthly * dto.TenureMonths;
+
+        return new CalculatorResultDto
+        {
+            EstimatedMonthlyPremium = monthly,
+            TotalPremium = total,
+            Note = $"Estimate for {dto.InsuranceType}, Age {dto.Age}, ₹{dto.CoverageAmount:N0} coverage over {dto.TenureMonths} months."
+        };
+    }
+}
+
+public class PaymentService : IPaymentService
+{
+    private readonly IPaymentRepository _repo;
+    private readonly IPolicyRepository _policyRepo;
+
+    public PaymentService(IPaymentRepository repo, IPolicyRepository policyRepo)
+    {
+        _repo = repo; _policyRepo = policyRepo;
+    }
+
+    public async Task<PaymentDto> InitiateAsync(InitiatePaymentDto dto, int userId)
+    {
+        var policy = await _policyRepo.GetUserPolicyByIdAsync(dto.UserPolicyId)
+            ?? throw new NotFoundException("Policy not found.");
+
+        var payment = new Payment
+        {
+            UserId = userId, UserPolicyId = dto.UserPolicyId,
+            Amount = dto.Amount, PaymentDate = DateTime.UtcNow,
+            PaymentMethod = dto.PaymentMethod, Status = "Success"
+        };
+
+        var created = await _repo.AddAsync(payment);
+        created.PaymentNumber = NumberGenerators.GeneratePaymentNumber(created.Id);
+        return new PaymentDto
+        {
+            Id = created.Id, PaymentNumber = created.PaymentNumber,
+            Amount = created.Amount, PaymentDate = created.PaymentDate,
+            PaymentMethod = created.PaymentMethod, Status = created.Status,
+            PolicyNumber = policy.PolicyNumber
+        };
+    }
+
+    public async Task<IEnumerable<PaymentDto>> GetHistoryAsync(int userId)
+    {
+        var payments = await _repo.GetByUserIdAsync(userId);
+        return payments.Select(p => new PaymentDto
+        {
+            Id = p.Id, PaymentNumber = p.PaymentNumber, Amount = p.Amount,
+            PaymentDate = p.PaymentDate, PaymentMethod = p.PaymentMethod,
+            Status = p.Status, PolicyNumber = p.UserPolicy?.PolicyNumber ?? ""
+        });
+    }
+}

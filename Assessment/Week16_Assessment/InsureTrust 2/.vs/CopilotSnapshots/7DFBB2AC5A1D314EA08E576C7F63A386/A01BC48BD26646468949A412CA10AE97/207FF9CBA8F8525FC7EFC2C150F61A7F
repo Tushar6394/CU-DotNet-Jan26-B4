@@ -1,0 +1,97 @@
+﻿@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Submit Claim";
+    var policies = ViewBag.Policies as List<InsureTrust.Web.Models.PolicyViewModel> ?? new();
+}
+
+<div class="page-header">
+    <h1>Submit Insurance Claim</h1>
+    <p>Please upload all required documents for claim verification</p>
+</div>
+
+@if (!policies.Any())
+{
+    <div class="alert alert-warning">You have no active policies eligible for claims. <a href="@Url.Action("Buy","Policy")">Buy a policy</a> first.</div>
+}
+else
+{
+    <div class="grid-2" style="align-items:start">
+        <div class="card">
+            <form method="post" enctype="multipart/form-data">
+                @Html.AntiForgeryToken()
+                <div class="form-group">
+                    <label class="form-label">Select Active Policy <span class="req">*</span></label>
+                    <select class="form-control" name="PolicyId">
+                        @foreach (var p in policies)
+                        {
+                            <option value="@p.Id">@p.PolicyNumber — @p.PolicyTypeName</option>
+                        }
+                    </select>
+                </div>
+
+                <div style="margin-bottom:1rem">
+                    <div class="form-label" style="margin-bottom:10px">Required Documents (12 mandatory)</div>
+                    <div id="docCounter" style="font-size:13px;color:var(--yellow);margin-bottom:10px;font-weight:500">0 of 12 documents uploaded</div>
+                    <div class="claim-doc-list">
+                        @{
+                            var docs = new[] {
+                                "Policy Number + Original Policy Document",
+                                "Duly Filled Claim Form (signed)",
+                                "Immediate Notification to Insurer",
+                                "KYC Documents",
+                                "Address Proof",
+                                "Bank Details",
+                                "Incident Evidence",
+                                "Police FIR",
+                                "Medical / Death Records",
+                                "Original Bills & Receipts",
+                                "Repair Estimates",
+                                "Witness Statements"
+                            };
+                            for (int i = 0; i < docs.Length; i++)
+                            {
+                                <div class="claim-doc-item" id="doc-@i">
+                                    <span style="font-size:13px">@(i+1). @docs[i]</span>
+                                    <div style="display:flex;align-items:center;gap:8px">
+                                        <span class="doc-status" style="font-size:11px;color:var(--gray-400)">Not uploaded</span>
+                                        <label class="btn btn-xs" style="cursor:pointer;margin:0">
+                                            Upload
+                                            <input type="file" name="Documents" class="doc-upload-input" style="display:none" />
+                                        </label>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;padding:12px">
+                    Submit Claim →
+                </button>
+            </form>
+        </div>
+        <div>
+            <div class="card">
+                <div class="card-title" style="margin-bottom:1rem">Claim Process</div>
+                @{
+                    var steps = new[] {
+                        ("1", "Submit Documents", "Upload all 12 required documents"),
+                        ("2", "Under Review", "Admin reviews your claim (3-5 days)"),
+                        ("3", "Approved / Denied", "You'll be notified of the decision"),
+                        ("4", "Amount Credited", "Approved amount added to your wallet")
+                    };
+                }
+                @foreach (var (num, title, desc) in steps)
+                {
+                    <div style="display:flex;gap:12px;margin-bottom:16px">
+                        <div style="width:28px;height:28px;border-radius:50%;background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0">@num</div>
+                        <div>
+                            <div style="font-weight:500;font-size:14px">@title</div>
+                            <div style="font-size:12px;color:var(--gray-500)">@desc</div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+}
